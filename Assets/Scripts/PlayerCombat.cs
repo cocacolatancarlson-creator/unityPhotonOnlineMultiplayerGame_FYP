@@ -13,7 +13,8 @@ public class PlayerCombat : MonoBehaviourPun
 	[SerializeField] float damage = 25f;
 	[SerializeField] float range = 100f;
 	[SerializeField] float fireCooldown = 0.25f;
-	[SerializeField] Image healthBar;          // optional: local player's on-screen bar
+	[SerializeField] GameObject hud;           // crosshair + health bar, shown only to the owner
+	[SerializeField] Image healthBar;
 
 	Health health;
 	PlayerManager playerManager;
@@ -36,9 +37,10 @@ public class PlayerCombat : MonoBehaviourPun
 
 	void Start()
 	{
-		if (!photonView.IsMine && healthBar != null)
+		// Every player prefab carries a HUD; other players' copies must not draw on this screen.
+		if (!photonView.IsMine && hud != null)
 		{
-			healthBar.transform.root.gameObject.SetActive(false);
+			hud.SetActive(false);
 		}
 	}
 
