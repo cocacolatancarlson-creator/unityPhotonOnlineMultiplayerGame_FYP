@@ -47,6 +47,24 @@ public static class UpgradeSetup
 		Debug.Log("UpgradeSetup: PlayerCombat and HUD wired on " + PlayerPrefab);
 	}
 
+	// The Game scene holds a copy of the armour model whose own Camera (depth 0) draws over the
+	// Cinemachine-driven Main Camera (depth -1): every client saw the same fixed view, and the
+	// crosshair did not line up with Camera.main. Only the Main Camera should render.
+	[MenuItem("Portfolio/Disable Stray Scene Cameras")]
+	public static void DisableStrayCameras()
+	{
+		UnityEngine.SceneManagement.Scene scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
+			"Assets/Scenes/Game.unity", UnityEditor.SceneManagement.OpenSceneMode.Single);
+		foreach (Camera cam in Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+		{
+			if (cam.CompareTag("MainCamera") || !cam.enabled)
+				continue;
+			cam.enabled = false;
+			Debug.Log("UpgradeSetup: disabled stray camera on " + cam.gameObject.name);
+		}
+		UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+	}
+
 	static Transform BuildHud(Transform parent)
 	{
 		Sprite uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
