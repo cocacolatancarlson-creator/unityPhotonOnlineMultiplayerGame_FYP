@@ -16,6 +16,9 @@ public static class PortfolioBuild
 		PlayerSettings.defaultWebScreenHeight = 720;
 		// Uncompressed files run from any static host without Content-Encoding headers.
 		PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+		// The armour model's 95 texture maps sit in Resources, so they ship even when unused:
+		// at 2048 px they made a 138 MB download. Web builds only; other platforms keep full size.
+		CapWebTextures("Assets/Resources/PhotonPrefabs/Player", 512);
 
 		BuildPlayerOptions options = new BuildPlayerOptions
 		{
@@ -30,6 +33,31 @@ public static class PortfolioBuild
 		if (report.summary.result != BuildResult.Succeeded)
 		{
 			EditorApplication.Exit(1);
+		}
+	}
+
+	// Lets MCP for Unity start its local HTTP server when the editor opens, so Claude Code can connect.
+	//   Unity.exe -projectPath <project> -executeMethod PortfolioBuild.EnableMcpAutoStart
+	public static void EnableMcpAutoStart()
+	{
+		EditorPrefs.SetBool("MCPForUnity.AutoStartOnLoad", true);
+		Debug.Log("PortfolioBuild: MCP for Unity auto-start enabled");
+	}
+
+	static void CapWebTextures(string folder, int maxSize)
+	{
+		foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { folder }))
+		{
+			TextureImporter importer = AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid)) as TextureImporter;
+			if (importer == null)
+				continue;
+			TextureImporterPlatformSettings web = importer.GetPlatformTextureSettings("WebGL");
+			if (web.overridden && web.maxTextureSize <= maxSize)
+				continue;
+			web.overridden = true;
+			web.maxTextureSize = maxSize;
+			importer.SetPlatformTextureSettings(web);
+			importer.SaveAndReimport();
 		}
 	}
 
