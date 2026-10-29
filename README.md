@@ -3,8 +3,7 @@
 My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built with
 Unity 2020.3 and Photon PUN 2. Each player is an armoured 3D character with their own camera. This repository,
 uploaded in 2025, holds an earlier prototype of it: a lobby, rooms, a host who starts the match, and the
-networked 3D character. The build linked in the report (August 2022) is still listed on Unity Play, not re-tested in 2026:
-https://play.unity.com/mg/other/mytempbuild-2
+networked 3D character. The final project was not recovered; the showcase shows it through the report's screenshots.
 
 **Play it in your browser:** https://cocacolatancarlson-creator.github.io/unityPhotonOnlineMultiplayerGame_FYP/
 
