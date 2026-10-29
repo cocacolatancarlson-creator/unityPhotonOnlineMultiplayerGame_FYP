@@ -81,15 +81,15 @@
   <header>
     <p class="who">Tan Carlson · Software Engineer · Game projects</p>
     <h1>Warping Playground: my 2022 multiplayer game, playable again</h1>
-    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. In October 2026 I directed Claude Code to recover the final build, which no longer played online, without its source code.</p>
+    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. In October 2026 I directed Claude Code to make the build I had published on Unity Play playable again, without its source code.</p>
   </header>
 
   <a class="hero" href="play/final-2022/">
-    <img src="img/final/two_players.jpg" alt="The recovered final build: a match with HP and MP bars, timer and scoreboard">
+    <img src="img/final/enemies.jpg" alt="The recovered build: a match with enemies, HP and MP bars, timer and scoreboard">
     <div class="body">
-      <span class="tag after">Final build · August 2022</span>
+      <span class="tag after">2022 build · recovered</span>
       <h3>Play Warping Playground</h3>
-      <p class="muted">The game as I finished it in 2022, recovered in October 2026. One connection setting changed; everything else is the original build.</p>
+      <p class="muted">The build I published on Unity Play on 15 August 2022, recovered in October 2026. One saved connection setting changed; nothing else in the game was modified.</p>
       <span class="btn">Play in browser →</span>
     </div>
   </a>
@@ -104,7 +104,7 @@
       <li><kbd>W</kbd> forward, <kbd>Space</kbd> jump, <kbd>S</kbd> turn around; move the mouse to turn the character and its camera.</li>
       <li>Left click: melee. Right click: throw the blade; right click again calls it back. <kbd>V</kbd>: warp to the stuck blade. <kbd>B</kbd>: laser between you and the blade.</li>
     </ol>
-    <p class="muted" style="margin:6px 0 0">Controls as described in my 2022 report.</p>
+    <p class="muted" style="margin:6px 0 0">Controls as described in my 2022 report. Two-player play of the recovered build has not been re-tested yet.</p>
   </div>
 
   <h2>The game, from my 2022 report</h2>
@@ -122,32 +122,32 @@
 
   <h2>How the final build was recovered</h2>
   <div class="shots">
-    <figure><img src="img/final/menu.jpg" alt="Recovered build: start menu" loading="lazy"><figcaption>Recovered build, start menu, connected to Photon (29 Oct 2026).</figcaption></figure>
-    <figure><img src="img/final/match.jpg" alt="Recovered build: a match in progress" loading="lazy"><figcaption>A match in the recovered build: HP and MP bars, timer, scoreboard.</figcaption></figure>
+    <figure><img src="img/final/menu.jpg" alt="Recovered build: start menu" loading="lazy"><figcaption>Recovered build: the start menu, connected over <code>wss://</code> (30 Oct 2026).</figcaption></figure>
+    <figure><img src="img/final/enemies.jpg" alt="Recovered build: a match with enemies" loading="lazy"><figcaption>A match in the recovered build: enemies, HP and MP bars, timer, scoreboard.</figcaption></figure>
   </div>
   <div class="cols" style="margin-top:14px">
     <div class="box">
       <h3>What was wrong, and the fix</h3>
       <ul>
-        <li>In 2022 I published the final build on Unity Play (the link is in my report). By 2026 it no longer played, and the final project's source was not recovered.</li>
+        <li>In August 2022 I published the build on Unity Play (the link is in my report). It does not play there today (tried October 2026), and the project's source was not recovered.</li>
         <li>Claude Code downloaded my build files (31 MB, built 15 Aug 2022) and ran them locally: they worked over plain http.</li>
-        <li>Root cause: the game connects to Photon over plain <code>ws://</code>, which browsers block on https pages such as Unity Play and GitHub Pages.</li>
-        <li>Redirecting the connection to <code>wss://</code> in the page failed: the server rejected the login, because the game still used the plain-ws handshake.</li>
-        <li>Fix: one value in the build's Photon settings, protocol 4 (WebSocket) → 5 (WebSocketSecure), patched in the packed data file. No source code was needed.</li>
+        <li>Likely cause: the build is set to connect to Photon over plain <code>ws://</code>, the setting my report gives for localhost; browsers block <code>ws://</code> on https pages such as Unity Play. My report says to switch the protocol before publishing there.</li>
+        <li>Redirecting the connection to <code>wss://</code> in the page failed: the name server could not parse the game's request and disconnected it, most likely because the game still encrypted it as it would on plain ws.</li>
+        <li>Fix: one byte in the build's Photon settings, protocol 4 (WebSocket) → 5 (WebSocketSecure), which gives the same secure connection as my report's publishing setting. Every other object is unchanged; the asset bundle was re-compressed. No source code was needed.</li>
       </ul>
     </div>
     <div class="box">
       <h3>Checks</h3>
       <ul>
         <li>The game now connects to Photon's servers over <code>wss://</code>.</li>
-        <li>Played in a browser: menu, room, start, and a match with HP and MP bars, the 180-second timer and enemy fire.</li>
+        <li>Single-player test in a browser: menu, room, start, and about 35 seconds of a match, with enemies spawning, the HP bar dropping and the timer counting down. Two-player play not yet re-tested.</li>
         <li>The original download and an unpatched copy are kept with SHA-256 hashes; the patch tool is <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/main/tools/recover_final_build">on GitHub</a>.</li>
       </ul>
     </div>
     <div class="box">
       <h3>Who did what</h3>
       <ul>
-        <li><b>Me:</b> built the game in 2022; found that the Unity Play copy no longer played; asked for the build to be recovered; chose to show the final game.</li>
+        <li><b>Me:</b> built the game in 2022; found that the Unity Play copy does not play; asked for the build to be recovered; chose to show the final game.</li>
         <li><b>Claude Code:</b> downloaded and unpacked the build, traced the failure to the connection protocol, wrote the patch tool and tested the result in a browser.</li>
       </ul>
     </div>

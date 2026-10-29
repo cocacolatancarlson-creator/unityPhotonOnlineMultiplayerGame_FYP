@@ -57,7 +57,8 @@
 
       // The August 2022 build from Unity Play, decompressed. One value changed in myTempBuild.data:
       // PhotonServerSettings Protocol 4 (WebSocket, ws://) -> 5 (WebSocketSecure, wss://), because browsers
-      // block ws:// on https pages. Everything else is byte-for-byte the 2022 build.
+      // block ws:// on https pages. Every other object in the data is unchanged (the asset bundle was re-compressed); this page and TemplateData
+      // come from Unity's default WebGL template.
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/myTempBuild.loader.js";
       var config = {
