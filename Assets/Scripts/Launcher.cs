@@ -27,6 +27,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 	void Start()
 	{
 		Debug.Log("Connecting to Master");
+		// Restore 2026-10: the Loading panel starts active but its "open" flag is serialized false,
+		// so OpenMenu("title") never closed it and "Loading" stayed visible behind the title menu.
+		MenuManager.Instance.OpenMenu("loading");
 		PhotonNetwork.ConnectUsingSettings();
 	}
 
