@@ -27,10 +27,11 @@ public class PlayerManager : MonoBehaviour
 	{
 		//Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
 		//controller = 
-		// Restore 2026-10: "Player" has no movement script; "Player2" carries PlayerMovement + the FreeLook camera.
-		// Small random offset so two CharacterControllers don't spawn inside each other.
+		// Restore 2026-10: spawn the 3D character ("Player"), as committed and as the FYP report describes;
+		// Editor/RestoreSetup.cs gives it the prototype's movement and camera. Small random offset so two
+		// CharacterControllers don't spawn inside each other.
 		Vector3 spawn = new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
-		PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player2"), spawn, Quaternion.identity);
+		PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), spawn, Quaternion.identity);
 	}
 
 	/*public void Die()
