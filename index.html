@@ -75,7 +75,7 @@
   <header>
     <p class="who">Tan Carlson · Software Engineer · Game projects</p>
     <h1>Warping Playground: my 2022 multiplayer game, restored and upgraded with an AI coding agent</h1>
-    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. The build linked in my report is still listed on Unity Play. The source I kept is an earlier prototype, so in October 2026 I directed Claude Code to make that prototype playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS.</p>
+    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. The final project was not recovered, so this page shows it through my report's screenshots. The source I kept is an earlier prototype, so in October 2026 I directed Claude Code to make that prototype playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS.</p>
   </header>
 
   <h2>The game, from my 2022 report</h2>
@@ -93,11 +93,6 @@
 
   <h2>Play it</h2>
   <section class="play" aria-label="Play">
-    <a class="card" href="https://play.unity.com/mg/other/mytempbuild-2" rel="noopener">
-      <img src="img/report/characters.jpg" alt="The final game: two 3D characters in the arena">
-      <div class="body"><span class="tag final">Unity Play · Aug 2022</span><h3>Warping Playground on Unity Play</h3>
-        <p class="muted">The build linked in my 2022 report ("WarpingPlaygroundTemp", uploaded Aug 2022), still listed on Unity Play. Not re-tested in 2026.</p><span class="btn">Open on Unity Play ↗</span></div>
-    </a>
     <a class="card" href="play/2022-restored/">
       <img src="img/restored_2022_character_spawn_host.jpg" alt="Restored prototype: two players' 3D characters">
       <div class="body"><span class="tag restored">Restored · 2022 code</span><h3>The prototype, playable again</h3>
@@ -124,7 +119,6 @@
       <li>The host presses <b>Start</b>; each player spawns as the 3D character.</li>
       <li>Move: <kbd>W</kbd> forward, <kbd>A</kbd>/<kbd>D</kbd> turn, <kbd>S</kbd> turn around, <kbd>Space</kbd> jump (again in the air to double-jump).</li>
       <li>Upgraded prototype: move the mouse to turn. Click to keep the pointer in the game; <kbd>Esc</kbd> releases it.</li>
-      <li>Final game, from the report: left click melee, right click throw (again to call the blade back), <kbd>V</kbd> warp to the stuck blade, <kbd>B</kbd> laser.</li>
     </ol>
   </div>
 
@@ -141,7 +135,7 @@
       <tr><td>Engine</td><td>Unity 2020.3.25f1</td><td>Unity 2020.3.49f1 (security patch)</td><td>Unity 6.3 LTS</td></tr>
     </table>
   </div>
-  <p class="muted" style="margin-top:8px">The final game's combat, enemies and scoring are not in the prototype's source, so neither prototype version has them; the report figures above show them, and the Unity Play card links the 2022 build.</p>
+  <p class="muted" style="margin-top:8px">The final game's combat, enemies and scoring are not in the prototype's source, so neither prototype version has them; the report figures above show them.</p>
 
   <h2>Screenshots of the prototype</h2>
   <div class="shots">
@@ -179,7 +173,7 @@
       <h3>Who did what</h3>
       <ul>
         <li><b>Me:</b> built the game in 2022; set the brief and the rules; caught that the agent's first fix made a test capsule the player instead of the 3D character, and had it read my report and redo the work (it also removed shooting it had added to the upgrade, which the design doesn't have); raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
-        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build and setup scripts; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests; found that the build linked in the report is still listed on Unity Play.</li>
+        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build and setup scripts; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests.</li>
       </ul>
     </div>
   </div>
