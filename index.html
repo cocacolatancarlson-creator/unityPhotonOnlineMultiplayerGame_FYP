@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tan Carlson — Game Projects</title>
-<meta name="description" content="A 2022 Unity + Photon multiplayer student project, restored and upgraded to Unity 6.3 LTS with Claude Code. Playable in the browser.">
+<meta name="description" content="Warping Playground, a 2022 Unity + Photon multiplayer game: the final build, plus its prototype restored and upgraded to Unity 6.3 LTS with Claude Code. Playable in the browser.">
 <style>
   :root {
     --bg: #0d1117; --panel: #161b22; --panel2: #1c2330; --line: #2d3644; --ink: #e6edf3; --muted: #9aa7b4;
@@ -50,8 +50,12 @@
   .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
   figure { margin: 0; }
   figure img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); display: block; }
-  figure.hud img { object-position: center bottom; }
+  figure.wide { grid-column: span 2; }
+  figure.wide img { aspect-ratio: auto; object-fit: contain; background: var(--bg); }
+  @media (max-width: 560px) { figure.wide { grid-column: auto; } }
   figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .tag.final { color: #f2cc60; background: var(--warnbg); }
+  .design { margin: 0 0 14px; max-width: 860px; }
 
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
   .box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
@@ -70,61 +74,83 @@
 <div class="wrap">
   <header>
     <p class="who">Tan Carlson · Software Engineer · Game projects</p>
-    <h1>A 2022 multiplayer game, restored and upgraded with an AI coding agent</h1>
-    <p class="lead">My final-year project at UTAR: an online multiplayer game in Unity with Photon PUN 2. In October 2026 I directed Claude Code to make the committed source playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS and finish what I had left unfinished. Every version below runs in your browser.</p>
+    <h1>Warping Playground: my 2022 multiplayer game, restored and upgraded with an AI coding agent</h1>
+    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. The final build is still online. The source I kept is an earlier prototype, so in October 2026 I directed Claude Code to make that prototype playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS.</p>
   </header>
 
+  <h2>The game, from my 2022 report</h2>
+  <p class="design">Each player is an armoured 3D character with their own camera. A match lasts 180 seconds. Players fight each other and yellow glowing enemies, which spawn every 3–10 seconds and fire purple bullets. The weapon is a blade you can swing, throw into a wall or the floor, warp to, or use as one end of a laser. Defeating an opponent scores +20, an enemy +5, and being defeated costs 10; a ranking board closes the match.</p>
+  <div class="shots">
+    <figure><img src="img/report/start_menu.jpg" alt="Warping Playground start menu" loading="lazy"><figcaption>Start menu (report Fig. 5-1).</figcaption></figure>
+    <figure><img src="img/report/characters.jpg" alt="Two players' armoured 3D characters in the arena" loading="lazy"><figcaption>Two players' 3D characters; HP and MP bars top left, timer, scoreboard (Fig. 5-7).</figcaption></figure>
+    <figure><img src="img/report/enemies.jpg" alt="Yellow glowing enemies in the arena" loading="lazy"><figcaption>Yellow glowing enemies spawn around the arena (Fig. 5-8).</figcaption></figure>
+    <figure><img src="img/report/melee.jpg" alt="Melee attack" loading="lazy"><figcaption>Melee attack, left click (Fig. 5-13).</figcaption></figure>
+    <figure><img src="img/report/throw.jpg" alt="Throwing the blade" loading="lazy"><figcaption>Throwing attack, right click; right click again calls the blade back (Fig. 5-14).</figcaption></figure>
+    <figure><img src="img/report/laser.jpg" alt="Laser between the character and the stuck blade" loading="lazy"><figcaption>Laser between the character and the stuck blade, <kbd>B</kbd> (Fig. 5-17).</figcaption></figure>
+    <figure class="wide"><img src="img/report/warp_sequence.jpg" alt="Three frames: the character warps to the thrown blade" loading="lazy"><figcaption>Warping to the blade stuck in a wall, <kbd>V</kbd> (Fig. 5-16).</figcaption></figure>
+    <figure><img src="img/report/ranking.jpg" alt="Ranking board after the match" loading="lazy"><figcaption>Ranking board when the timer reaches zero (Fig. 5-11).</figcaption></figure>
+  </div>
+
+  <h2>Play it</h2>
   <section class="play" aria-label="Play">
+    <a class="card" href="https://play.unity.com/mg/other/mytempbuild-2" rel="noopener">
+      <img src="img/report/characters.jpg" alt="The final game: two 3D characters in the arena">
+      <div class="body"><span class="tag final">Final build · Aug 2022</span><h3>Warping Playground, the full game</h3>
+        <p class="muted">The build the report describes, still on Unity Play: melee, throw, warp, laser, enemies, timer and ranking.</p><span class="btn">Play on Unity Play ↗</span></div>
+    </a>
     <a class="card" href="play/2022-restored/">
-      <img src="img/restored_2022_match_start_host.jpg" alt="Restored 2022 build: two networked players in the level">
-      <div class="body"><span class="tag restored">Restored · 2022 code</span><h3>The original, playable again</h3>
-        <p class="muted">Unity 2020.3 · three small fixes, nothing added. Lobby, rooms and networked movement.</p><span class="btn">Play in browser →</span></div>
+      <img src="img/restored_2022_character_spawn_host.jpg" alt="Restored prototype: two players' 3D characters">
+      <div class="body"><span class="tag restored">Restored · 2022 code</span><h3>The prototype, playable again</h3>
+        <p class="muted">Unity 2020.3 · small fixes, nothing added. The 3D character walks, turns and jumps with its own camera; lobby, rooms, networked movement.</p><span class="btn">Play in browser →</span></div>
     </a>
     <a class="card" href="play/2026-upgraded/">
-      <img src="img/upgraded_2026_host_view.jpg" alt="Upgraded build: own third-person camera and health bar">
-      <div class="body"><span class="tag after">Upgraded · Oct 2026</span><h3>Unity 6.3 LTS, with combat</h3>
-        <p class="muted">Own third-person camera, shooting, health, respawn, name tags, unit tests.</p><span class="btn">Play in browser →</span></div>
+      <img src="img/upgraded_2026_character_mouse_turn.jpg" alt="Upgraded prototype: the character turned with the mouse">
+      <div class="body"><span class="tag after">Upgraded · Oct 2026</span><h3>The prototype on Unity 6.3 LTS</h3>
+        <p class="muted">Mouse turning as the report describes, a fixed room list, error screens, unit tests.</p><span class="btn">Play in browser →</span></div>
     </a>
     <a class="card" href="play/2022-original-build/">
-      <img src="img/original_2022_build_ingame.jpg" alt="An original 2022 web build of the project">
+      <img src="img/original_2022_build_ingame.jpg" alt="An original 2022 web build of the prototype">
       <div class="body"><span class="tag before">Original 2022 web build</span><h3>An earlier build, as found</h3>
-        <p class="muted">A web build from an earlier snapshot of the project, unchanged. Fixed 1920×1024 canvas.</p><span class="btn">Play in browser →</span></div>
+        <p class="muted">A web build from an earlier snapshot of the prototype, unchanged. Fixed 1920×1024 canvas.</p><span class="btn">Play in browser →</span></div>
     </a>
   </section>
-  <p class="muted">Desktop browser needed. First load downloads about 40–56 MB. Multiplayer runs on Photon Cloud's free tier.</p>
+  <p class="muted">Desktop browser needed. The prototype builds download about 40–57 MB on first load. Multiplayer runs on Photon Cloud's free tier.</p>
 
   <h2>How to play</h2>
   <div class="how">
     <ol>
       <li>Open a version in <b>two browser tabs</b> (or send the link to a friend).</li>
       <li>Tab 1: <b>Create Room</b>, type a name, create. Tab 2: <b>Find Room</b>, click the room to join.</li>
-      <li>The host presses <b>Start</b>; both players load into the level.</li>
-      <li>Move: <kbd>W</kbd> forward, <kbd>A</kbd>/<kbd>D</kbd> turn, <kbd>S</kbd> turn around, <kbd>Space</kbd> jump (again in the air to double-jump), mouse to look around.</li>
-      <li>Upgraded version: <b>left-click</b> to shoot at the other player (the crosshair flashes red on a hit); four hits respawn them. <kbd>Esc</kbd> releases the mouse.</li>
+      <li>The host presses <b>Start</b>; each player spawns as the 3D character.</li>
+      <li>Move: <kbd>W</kbd> forward, <kbd>A</kbd>/<kbd>D</kbd> turn, <kbd>S</kbd> turn around, <kbd>Space</kbd> jump (again in the air to double-jump).</li>
+      <li>Upgraded prototype: move the mouse to turn. Click to keep the pointer in the game; <kbd>Esc</kbd> releases it.</li>
+      <li>Final build only: left click melee, right click throw (again to call the blade back), <kbd>V</kbd> warp to the stuck blade, <kbd>B</kbd> laser.</li>
     </ol>
   </div>
 
-  <h2>Before and after</h2>
+  <h2>The prototype, before and after</h2>
   <div class="table">
     <table>
       <tr><th></th><th>2022 source, as committed</th><th>Restored</th><th>Upgraded</th></tr>
-      <tr><td>Two players can play?</td><td class="no">No: the spawned model had no movement script</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
-      <tr><td>Each player's camera</td><td class="no">One fixed view for everyone</td><td>Unchanged (known issue)</td><td class="yes">Own third-person camera</td></tr>
-      <tr><td>Combat</td><td class="no">Shooting, health, respawn commented out</td><td>Unchanged</td><td class="yes">Working across two clients</td></tr>
+      <tr><td>Your character moves?</td><td class="no">No: the spawned 3D character had no movement script</td><td class="yes">Yes: walk, turn, jump</td><td class="yes">Yes</td></tr>
+      <tr><td>Each player's camera</td><td class="no">One fixed view for everyone</td><td class="yes">Own third-person camera</td><td class="yes">Own third-person camera</td></tr>
+      <tr><td>Mouse turns the character (report design)</td><td class="no">No, keys only</td><td>Unchanged</td><td class="yes">Yes</td></tr>
       <tr><td>Room list</td><td class="no">Rooms could vanish</td><td>Unchanged</td><td class="yes">Full list kept; unit-tested</td></tr>
-      <tr><td>Automated tests</td><td class="no">None</td><td>None</td><td class="yes">6 EditMode tests</td></tr>
+      <tr><td>Disconnect or failed join</td><td class="no">No message</td><td>Unchanged</td><td class="yes">Error screens</td></tr>
+      <tr><td>Automated tests</td><td class="no">None</td><td>None</td><td class="yes">3 EditMode tests</td></tr>
       <tr><td>Engine</td><td>Unity 2020.3.25f1</td><td>Unity 2020.3.49f1 (security patch)</td><td>Unity 6.3 LTS</td></tr>
     </table>
   </div>
+  <p class="muted" style="margin-top:8px">The final game's combat, enemies and scoring are not in the prototype's source, so neither prototype version has them; play the final build for those.</p>
 
-  <h2>Screenshots</h2>
+  <h2>Screenshots of the prototype</h2>
   <div class="shots">
-    <figure><img src="img/source_asis_ingame_no_player_control.jpg" alt="2022 source: no controllable character"><figcaption>2022 source as committed: the spawned model has no movement script, so input does nothing.</figcaption></figure>
-    <figure><img src="img/restored_2022_room_two_players.jpg" alt="Restored: room with two players"><figcaption>Restored, host's view: both players in the room.</figcaption></figure>
-    <figure><img src="img/restored_2022_after_move_client2.jpg" alt="Restored: second client sees the host move"><figcaption>Restored, second client: the host's character moved, synced over Photon.</figcaption></figure>
-    <figure class="hud"><img src="img/upgraded_2026_client2_view.jpg" alt="Upgraded: second client's own camera"><figcaption>Upgraded, second client: its own camera following its own character.</figcaption></figure>
-    <figure class="hud"><img src="img/upgraded_2026_host_damaged.png" alt="Upgraded: host health bar after hits"><figcaption>Upgraded: the host's health bar is down after the other player's hits.</figcaption></figure>
-    <figure class="hud"><img src="img/upgraded_2026_host_after_respawn.jpg" alt="Upgraded: host after respawn"><figcaption>Upgraded: after more hits the host respawned at a new point, full health.</figcaption></figure>
+    <figure><img src="img/source_asis_ingame_no_player_control.jpg" alt="2022 source: no controllable character" loading="lazy"><figcaption>2022 source as committed: the spawned character has no movement script, so input does nothing.</figcaption></figure>
+    <figure><img src="img/restored_2022_character_spawn_host.jpg" alt="Restored: both players as the 3D character" loading="lazy"><figcaption>Restored, host: both players spawn as the 3D character.</figcaption></figure>
+    <figure><img src="img/restored_2022_character_turn_walk_client2.jpg" alt="Restored: second client turned and walked" loading="lazy"><figcaption>Restored, second client: turned with <kbd>D</kbd>, walked with <kbd>W</kbd>; its own camera follows.</figcaption></figure>
+    <figure><img src="img/restored_2022_character_jump.jpg" alt="Restored: the character mid-jump" loading="lazy"><figcaption>Restored: mid-jump, the shadow stays on the ground.</figcaption></figure>
+    <figure><img src="img/upgraded_2026_character_mouse_turn.jpg" alt="Upgraded: turned with the mouse" loading="lazy"><figcaption>Upgraded: moving the mouse turned the character and its camera.</figcaption></figure>
+    <figure><img src="img/upgraded_2026_character_turn180_jump.jpg" alt="Upgraded: turned around and jumping" loading="lazy"><figcaption>Upgraded: <kbd>S</kbd> turned it around and <kbd>Space</kbd> jumped.</figcaption></figure>
   </div>
 
   <h2>How the upgrade was done</h2>
@@ -142,17 +168,18 @@
     <div class="box">
       <h3>Bugs found and fixed</h3>
       <ul>
-        <li>The spawned prefab was the art model, with no movement script.</li>
-        <li>A model placed in the level carried its own camera, drawn over the game camera: everyone saw one view and shots missed.</li>
+        <li>The spawned 3D character had no movement script or camera; both sat on a test prefab.</li>
+        <li>A copy of the character placed in the level carried its own camera, drawn over the game camera, so everyone saw one fixed view.</li>
         <li>The room list redrew only Photon's changes, so rooms could vanish.</li>
         <li>A loading panel's saved state disagreed with the scene, so it never closed.</li>
+        <li>Movement added in code took the script's defaults, so jumps floated; the prototype's own tuning is copied over.</li>
       </ul>
     </div>
     <div class="box">
       <h3>Who did what</h3>
       <ul>
-        <li><b>Me:</b> built the original as a student project in 2022; set the brief and the rules; raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
-        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build scripts and upgrade code; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests.</li>
+        <li><b>Me:</b> built the game in 2022; set the brief and the rules; caught that the agent's first fix swapped the 3D character for a test capsule and added shooting the design doesn't have, and had it re-read my report and redo the work; raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
+        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build and setup scripts; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests; found that the report's Unity Play link still works.</li>
       </ul>
     </div>
   </div>
