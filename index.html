@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tan Carlson — Game Projects</title>
-<meta name="description" content="Warping Playground, a 2022 Unity + Photon multiplayer game: the final build, plus its prototype restored and upgraded to Unity 6.3 LTS with Claude Code. Playable in the browser.">
+<meta name="description" content="Warping Playground, a 2022 Unity + Photon multiplayer game: its design report, plus its prototype restored and upgraded to Unity 6.3 LTS with Claude Code. Playable in the browser.">
 <style>
   :root {
     --bg: #0d1117; --panel: #161b22; --panel2: #1c2330; --line: #2d3644; --ink: #e6edf3; --muted: #9aa7b4;
@@ -75,7 +75,7 @@
   <header>
     <p class="who">Tan Carlson · Software Engineer · Game projects</p>
     <h1>Warping Playground: my 2022 multiplayer game, restored and upgraded with an AI coding agent</h1>
-    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. The final build is still online. The source I kept is an earlier prototype, so in October 2026 I directed Claude Code to make that prototype playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS.</p>
+    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. The build linked in my report is still listed on Unity Play. The source I kept is an earlier prototype, so in October 2026 I directed Claude Code to make that prototype playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS.</p>
   </header>
 
   <h2>The game, from my 2022 report</h2>
@@ -95,13 +95,13 @@
   <section class="play" aria-label="Play">
     <a class="card" href="https://play.unity.com/mg/other/mytempbuild-2" rel="noopener">
       <img src="img/report/characters.jpg" alt="The final game: two 3D characters in the arena">
-      <div class="body"><span class="tag final">Final build · Aug 2022</span><h3>Warping Playground, the full game</h3>
-        <p class="muted">The build the report describes, still on Unity Play: melee, throw, warp, laser, enemies, timer and ranking.</p><span class="btn">Play on Unity Play ↗</span></div>
+      <div class="body"><span class="tag final">Unity Play · Aug 2022</span><h3>Warping Playground on Unity Play</h3>
+        <p class="muted">The build linked in my 2022 report ("WarpingPlaygroundTemp", uploaded Aug 2022), still listed on Unity Play. Not re-tested in 2026.</p><span class="btn">Open on Unity Play ↗</span></div>
     </a>
     <a class="card" href="play/2022-restored/">
       <img src="img/restored_2022_character_spawn_host.jpg" alt="Restored prototype: two players' 3D characters">
       <div class="body"><span class="tag restored">Restored · 2022 code</span><h3>The prototype, playable again</h3>
-        <p class="muted">Unity 2020.3 · small fixes, nothing added. The 3D character walks, turns and jumps with its own camera; lobby, rooms, networked movement.</p><span class="btn">Play in browser →</span></div>
+        <p class="muted">Unity 2020.3 · small fixes, no new features. The 3D character walks, turns and jumps with its own camera; lobby, rooms, networked movement.</p><span class="btn">Play in browser →</span></div>
     </a>
     <a class="card" href="play/2026-upgraded/">
       <img src="img/upgraded_2026_character_mouse_turn.jpg" alt="Upgraded prototype: the character turned with the mouse">
@@ -124,7 +124,7 @@
       <li>The host presses <b>Start</b>; each player spawns as the 3D character.</li>
       <li>Move: <kbd>W</kbd> forward, <kbd>A</kbd>/<kbd>D</kbd> turn, <kbd>S</kbd> turn around, <kbd>Space</kbd> jump (again in the air to double-jump).</li>
       <li>Upgraded prototype: move the mouse to turn. Click to keep the pointer in the game; <kbd>Esc</kbd> releases it.</li>
-      <li>Final build only: left click melee, right click throw (again to call the blade back), <kbd>V</kbd> warp to the stuck blade, <kbd>B</kbd> laser.</li>
+      <li>Final game, from the report: left click melee, right click throw (again to call the blade back), <kbd>V</kbd> warp to the stuck blade, <kbd>B</kbd> laser.</li>
     </ol>
   </div>
 
@@ -134,14 +134,14 @@
       <tr><th></th><th>2022 source, as committed</th><th>Restored</th><th>Upgraded</th></tr>
       <tr><td>Your character moves?</td><td class="no">No: the spawned 3D character had no movement script</td><td class="yes">Yes: walk, turn, jump</td><td class="yes">Yes</td></tr>
       <tr><td>Each player's camera</td><td class="no">One fixed view for everyone</td><td class="yes">Own third-person camera</td><td class="yes">Own third-person camera</td></tr>
-      <tr><td>Mouse turns the character (report design)</td><td class="no">No, keys only</td><td>Unchanged</td><td class="yes">Yes</td></tr>
+      <tr><td>Mouse turns the character (report design)</td><td class="no">No (no movement at all)</td><td>Unchanged</td><td class="yes">Yes</td></tr>
       <tr><td>Room list</td><td class="no">Rooms could vanish</td><td>Unchanged</td><td class="yes">Full list kept; unit-tested</td></tr>
-      <tr><td>Disconnect or failed join</td><td class="no">No message</td><td>Unchanged</td><td class="yes">Error screens</td></tr>
+      <tr><td>Disconnect or failed join</td><td class="no">No message</td><td>Unchanged</td><td>Error screens (code-reviewed, not play-tested)</td></tr>
       <tr><td>Automated tests</td><td class="no">None</td><td>None</td><td class="yes">3 EditMode tests</td></tr>
       <tr><td>Engine</td><td>Unity 2020.3.25f1</td><td>Unity 2020.3.49f1 (security patch)</td><td>Unity 6.3 LTS</td></tr>
     </table>
   </div>
-  <p class="muted" style="margin-top:8px">The final game's combat, enemies and scoring are not in the prototype's source, so neither prototype version has them; play the final build for those.</p>
+  <p class="muted" style="margin-top:8px">The final game's combat, enemies and scoring are not in the prototype's source, so neither prototype version has them; the report figures above show them, and the Unity Play card links the 2022 build.</p>
 
   <h2>Screenshots of the prototype</h2>
   <div class="shots">
@@ -159,8 +159,8 @@
       <h3>The method</h3>
       <ul>
         <li>The untouched original is tag <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/v2022-original"><code>v2022-original</code></a>, backed up before any upgrade work.</li>
-        <li>Restore first, adding nothing: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/restore-2022-playable"><code>restore-2022-playable</code></a>.</li>
-        <li>Then the upgrade: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/ai-upgrade-2026-10"><code>ai-upgrade-2026-10</code></a>, in small labelled commits.</li>
+        <li>Restore with no new features: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/restore-2022-playable"><code>restore-2022-playable</code></a>.</li>
+        <li>The upgrade: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/ai-upgrade-2026-10"><code>ai-upgrade-2026-10</code></a>, which starts from the restore's first fix, in small labelled commits.</li>
         <li>Each claim checked against a build, log, test or two-client play test; claims the check contradicted were rewritten or dropped.</li>
       </ul>
       <p class="muted" style="margin-top:8px">See every change: <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/compare/v2022-original...ai-upgrade-2026-10">compare the original with the upgrade</a>.</p>
@@ -168,7 +168,7 @@
     <div class="box">
       <h3>Bugs found and fixed</h3>
       <ul>
-        <li>The spawned 3D character had no movement script or camera; both sat on a test prefab.</li>
+        <li>The spawned 3D character had no movement script or follow camera; both sat on a test prefab.</li>
         <li>A copy of the character placed in the level carried its own camera, drawn over the game camera, so everyone saw one fixed view.</li>
         <li>The room list redrew only Photon's changes, so rooms could vanish.</li>
         <li>A loading panel's saved state disagreed with the scene, so it never closed.</li>
@@ -178,8 +178,8 @@
     <div class="box">
       <h3>Who did what</h3>
       <ul>
-        <li><b>Me:</b> built the game in 2022; set the brief and the rules; caught that the agent's first fix swapped the 3D character for a test capsule and added shooting the design doesn't have, and had it re-read my report and redo the work; raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
-        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build and setup scripts; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests; found that the report's Unity Play link still works.</li>
+        <li><b>Me:</b> built the game in 2022; set the brief and the rules; caught that the agent's first fix made a test capsule the player instead of the 3D character, and had it read my report and redo the work (it also removed shooting it had added to the upgrade, which the design doesn't have); raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
+        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build and setup scripts; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests; found that the build linked in the report is still listed on Unity Play.</li>
       </ul>
     </div>
   </div>
