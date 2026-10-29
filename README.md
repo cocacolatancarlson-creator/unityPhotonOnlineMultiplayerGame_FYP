@@ -3,7 +3,8 @@
 My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built with
 Unity 2020.3 and Photon PUN 2. Each player is an armoured 3D character with their own camera. This repository,
 uploaded in 2025, holds an earlier prototype of it: a lobby, rooms, a host who starts the match, and the
-networked 3D character. The final build (August 2022) is on Unity Play: https://play.unity.com/mg/other/mytempbuild-2
+networked 3D character. The build linked in the report (August 2022) is still listed on Unity Play, not re-tested in 2026:
+https://play.unity.com/mg/other/mytempbuild-2
 
 **Play it in your browser:** https://cocacolatancarlson-creator.github.io/unityPhotonOnlineMultiplayerGame_FYP/
 
@@ -11,8 +12,8 @@ networked 3D character. The final build (August 2022) is on Unity Play: https://
 
 | Where | What |
 |---|---|
-| tag `v2022-original` | The prototype exactly as uploaded. The committed source could not be played: the spawned 3D character had no movement script or camera. |
-| branch `restore-2022-playable` | Four small fixes so it plays again, nothing added: the 3D character gets the prototype's own movement and camera. See `RESTORE.md`. |
+| tag `v2022-original` | The prototype exactly as uploaded. The committed source could not be played: the spawned 3D character had no movement script or follow camera. |
+| branch `restore-2022-playable` | Four small fixes so it plays again, no new features: the prototype's own movement and camera move onto the 3D character. See `RESTORE.md`. |
 | branch `ai-upgrade-2026-10` | Upgraded to Unity 6.3 LTS; mouse turning as the 2022 report describes; room-list fix with 3 unit tests; error screens. See `UPGRADE.md`. |
 
 I directed the work and set its rules; Claude Code, my AI coding agent, wrote the code and ran the builds and the two-player tests.
