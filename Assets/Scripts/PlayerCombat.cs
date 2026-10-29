@@ -15,10 +15,12 @@ public class PlayerCombat : MonoBehaviourPun
 	[SerializeField] float fireCooldown = 0.25f;
 	[SerializeField] GameObject hud;           // crosshair + health bar, shown only to the owner
 	[SerializeField] Image healthBar;
+	[SerializeField] Image crosshair;          // flashes red on a hit
 
 	Health health;
 	PlayerManager playerManager;
 	float nextFireTime;
+	float hitFlashUntil;
 	bool dying;
 
 	void Awake()
@@ -64,6 +66,11 @@ public class PlayerCombat : MonoBehaviourPun
 		{
 			Die();
 		}
+
+		if (crosshair != null)
+		{
+			crosshair.color = Time.time < hitFlashUntil ? Color.red : Color.white;
+		}
 	}
 
 	void Fire()
@@ -83,6 +90,7 @@ public class PlayerCombat : MonoBehaviourPun
 			if (target != null)
 			{
 				target.photonView.RPC(nameof(RPC_TakeDamage), target.photonView.Owner, damage);
+				hitFlashUntil = Time.time + 0.15f;
 			}
 			return;   // first thing that isn't us stops the shot
 		}

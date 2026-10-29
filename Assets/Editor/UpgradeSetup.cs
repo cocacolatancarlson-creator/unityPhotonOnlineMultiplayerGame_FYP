@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +30,13 @@ public static class UpgradeSetup
 			SerializedObject so = new SerializedObject(combat);
 			so.FindProperty("hud").objectReferenceValue = hud.gameObject;
 			so.FindProperty("healthBar").objectReferenceValue = hud.Find("HealthBar/Fill").GetComponent<Image>();
+			so.FindProperty("crosshair").objectReferenceValue = hud.Find("Crosshair").GetComponent<Image>();
 			so.ApplyModifiedPropertiesWithoutUndo();
+
+			if (root.transform.Find("NameTag") == null)
+			{
+				BuildNameTag(root.transform);
+			}
 
 			PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefab);
 		}
@@ -76,6 +83,24 @@ public static class UpgradeSetup
 		fillRect.offsetMax = new Vector2(-3f, -3f);
 
 		return hud.transform;
+	}
+
+	static void BuildNameTag(Transform parent)
+	{
+		GameObject go = new GameObject("NameTag", typeof(TextMeshPro));
+		go.transform.SetParent(parent, false);
+		go.transform.localPosition = new Vector3(0f, 1.5f, 0f);   // just above the 2 m capsule
+		TextMeshPro text = go.GetComponent<TextMeshPro>();
+		text.rectTransform.sizeDelta = new Vector2(4f, 0.6f);
+		text.fontSize = 3f;
+		text.alignment = TextAlignmentOptions.Center;
+		text.color = Color.white;
+		text.text = "Player";
+
+		NameTag tag = go.AddComponent<NameTag>();
+		SerializedObject so = new SerializedObject(tag);
+		so.FindProperty("label").objectReferenceValue = text;
+		so.ApplyModifiedPropertiesWithoutUndo();
 	}
 
 	static Image NewImage(string name, Transform parent, Sprite sprite, Color color)
