@@ -43,8 +43,8 @@ Screenshots: `game_portfolio/evidence/upgraded_2026_character_*`.
 
 - The final Warping Playground features in the report (melee, throw and recall, warp, laser, enemies, timer,
   scoring, ranking board) are not in this prototype's source, and the final project's source was not recovered.
-  A WebGL build titled "WarpingPlaygroundTemp" (uploaded 15 Aug 2022) is still listed on Unity Play at the link in
-  report section 5.2.10: https://play.unity.com/mg/other/mytempbuild-2
+  The report's Unity Play upload ("WarpingPlaygroundTemp", 15 Aug 2022, section 5.2.10) is still listed but no
+  longer plays (tried on 29 Oct 2026).
 - 15 CS0618 deprecation warnings remain inside Photon PUN 2.40 (third-party). Upgrading to PUN 2.56 needs the Asset Store package.
 - Button text in the Unity 6 build looks underlined (TextMesh Pro font asset carried over from 2022); not yet investigated.
 - No CI pipeline yet.
