@@ -25,17 +25,17 @@ public class PlayerManager : MonoBehaviour
 
 	void CreateController()
 	{
-		//Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
-		//controller = 
-		// Restore 2026-10: "Player" has no movement script; "Player2" carries PlayerMovement + the FreeLook camera.
-		// Small random offset so two CharacterControllers don't spawn inside each other.
+		// "Player2" carries PlayerMovement + the FreeLook camera; the random offset keeps players apart.
+		// The manager's ViewID travels as instantiation data so the character can find its manager to respawn.
 		Vector3 spawn = new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
-		PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player2"), spawn, Quaternion.identity);
+		controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player2"), spawn, Quaternion.identity,
+			0, new object[] { PV.ViewID });
 	}
 
-	/*public void Die()
+	// Finishes the respawn that the 2022 code had commented out.
+	public void Die()
 	{
 		PhotonNetwork.Destroy(controller);
 		CreateController();
-	}*/
+	}
 }

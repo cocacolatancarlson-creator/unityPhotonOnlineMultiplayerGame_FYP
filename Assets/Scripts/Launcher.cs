@@ -5,10 +5,14 @@ using Photon.Pun;
 using TMPro;
 using Photon.Realtime;
 using System.Linq;
+using Portfolio.Core;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
 	public static Launcher Instance;
+
+	// Full room list; Photon only sends changes (see RoomListCache).
+	readonly RoomListCache<RoomInfo> roomCache = new RoomListCache<RoomInfo>();
 
 	[SerializeField] TMP_InputField roomNameInputField;
 	[SerializeField] TMP_Text errorText;
@@ -42,6 +46,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedLobby()
 	{
+		roomCache.Clear();
 		MenuManager.Instance.OpenMenu("title");
 		Debug.Log("Joined Lobby");
 		PhotonNetwork.NickName="Player"+ Random.Range(0, 1000).ToString("0000");
@@ -113,17 +118,41 @@ public class Launcher : MonoBehaviourPunCallbacks
 	
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
 	{
+		foreach (RoomInfo info in roomList)
+		{
+			// Closed, hidden and full rooms can't be joined, so they leave the list too.
+			bool gone = info.RemovedFromList || !info.IsOpen || !info.IsVisible
+				|| (info.MaxPlayers > 0 && info.PlayerCount >= info.MaxPlayers);
+			roomCache.Apply(info.Name, gone, info);
+		}
+
 		foreach (Transform trans in roomListContent)
 		{
 			Destroy(trans.gameObject);
 		}
 
-		for (int i = 0; i < roomList.Count; i++)
+		foreach (RoomInfo info in roomCache.Rooms)
 		{
-			if (roomList[i].RemovedFromList)
-				continue;
-			Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(roomList[i]);
+			Instantiate(roomListItemPrefab, roomListContent).GetComponent<RoomListItem>().SetUp(info);
 		}
+	}
+
+	public override void OnLeftLobby()
+	{
+		roomCache.Clear();
+	}
+
+	public override void OnDisconnected(DisconnectCause cause)
+	{
+		roomCache.Clear();
+		errorText.text = "Disconnected: " + cause;
+		MenuManager.Instance.OpenMenu("error");
+	}
+
+	public override void OnJoinRoomFailed(short returnCode, string message)
+	{
+		errorText.text = "Could not join the room: " + message;
+		MenuManager.Instance.OpenMenu("error");
 	}
 	
 	public override void OnPlayerEnteredRoom(Player newPlayer)
