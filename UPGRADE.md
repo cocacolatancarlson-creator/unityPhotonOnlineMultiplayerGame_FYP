@@ -35,7 +35,7 @@ warp and laser on the 3D character), so it was removed after the report was read
 | WebGL build, Unity 6000.3.27f1 | Succeeded, 57.4 MB (the 3 logged "errors" are IL2CPP notes that three large TextMesh Pro methods got their own C++ file) |
 | Create, list, join, host-only Start | Pass |
 | Each player spawns as the 3D character with its own following camera | Pass: both clients |
-| W, Space, S, A/D and mouse turning | Pass: W walks, Space jumps and lands, S turns the character and camera 180 degrees, moving the mouse turns it; the other client sees the movement |
+| W, Space, S and mouse turning | Pass: W walks, Space jumps and lands, S turns the character and camera 180 degrees, moving the mouse turns it; the other client sees the movement |
 
 Screenshots: `game_portfolio/evidence/upgraded_2026_character_*`.
 
