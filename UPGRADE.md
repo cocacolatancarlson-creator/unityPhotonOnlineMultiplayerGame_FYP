@@ -1,7 +1,7 @@
 # AI-assisted upgrade, October 2026
 
-Branch `ai-upgrade-2026-10`, cut from `restore-2022-playable` (which is cut from tag `v2022-original`).
-Code written by Claude Code, directed and reviewed by Tan Carlson. Each change is its own commit.
+Branch `ai-upgrade-2026-10`, which starts from the restore branch's first fix (`ff9e0a9`); `restore-2022-playable` is cut from tag `v2022-original`.
+Code written by Claude Code, directed by Tan Carlson. Each change is its own commit.
 
 The game design is the one in the FYP report (Warping Playground): each player is an armoured 3D character
 with its own third-person camera. W moves forward, Space jumps, S turns back 180 degrees, and moving the
