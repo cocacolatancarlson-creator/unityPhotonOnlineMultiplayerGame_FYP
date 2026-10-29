@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tan Carlson — Game Projects</title>
+<meta name="description" content="A 2022 Unity + Photon multiplayer student project, restored and upgraded to Unity 6.3 LTS with Claude Code. Playable in the browser.">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel2: #1c2330; --line: #2d3644; --ink: #e6edf3; --muted: #9aa7b4;
+    --accent: #58a6ff; --ok: #3fb950; --bad: #f85149; --warn: #d29922; --warnbg: #2b2410;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 40px 0 18px; border-bottom: 1px solid var(--line); }
+  header .who { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
+  h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0 0 10px; }
+  .lead { color: var(--muted); max-width: 760px; margin: 0; }
+  h2 { font-size: 24px; margin: 38px 0 10px; }
+  h3 { font-size: 18px; margin: 0 0 6px; }
+  p { margin: 0 0 12px; }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin: 0 0 6px; }
+  .muted { color: var(--muted); font-size: 14px; }
+
+  .play { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 22px 0 6px; }
+  .play a.card { display: block; text-decoration: none; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+                 border-radius: 10px; overflow: hidden; transition: border-color .15s, transform .15s; }
+  .play a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .play img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #222; }
+  .play .body { padding: 12px 14px 14px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px;
+         padding: 1px 8px; border-radius: 10px; margin-bottom: 6px; }
+  .tag.before { color: #ffb4ad; background: #3a1714; } .tag.restored { color: #9ecbff; background: #132339; } .tag.after { color: #8fe2a0; background: #11301b; }
+  .btn { display: inline-block; margin-top: 8px; font-weight: 600; color: var(--accent); }
+
+  .how { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .how ol { margin: 0; padding-left: 20px; } .how li { margin: 0 0 4px; }
+  kbd { background: var(--panel2); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 13px; font-family: inherit; }
+
+  .table { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 640px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; background: var(--panel); }
+  td.no { color: var(--bad); } td.yes { color: var(--ok); }
+
+  .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  figure { margin: 0; }
+  figure img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); display: block; }
+  figure.hud img { object-position: center bottom; }
+  figcaption { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+
+  .soon { display: grid; grid-template-columns: 160px 1fr; gap: 16px; background: var(--panel); border: 1px dashed var(--warn); border-radius: 10px; padding: 14px; }
+  .soon .ph { border-radius: 8px; background: var(--warnbg); color: var(--warn); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; font-weight: 700; }
+  .soon .ph b { font-size: 34px; letter-spacing: 3px; }
+  @media (max-width: 560px) { .soon { grid-template-columns: 1fr; } }
+
+  footer { margin: 44px 0 30px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="who">Tan Carlson · Software Engineer · Game projects</p>
+    <h1>A 2022 multiplayer game, restored and upgraded with an AI coding agent</h1>
+    <p class="lead">My final-year project at UTAR: an online multiplayer game in Unity with Photon PUN 2. In October 2026 I directed Claude Code to make the committed source playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS and finish what I had left unfinished. Every version below runs in your browser.</p>
+  </header>
+
+  <section class="play" aria-label="Play">
+    <a class="card" href="play/2022-restored/">
+      <img src="img/restored_2022_match_start_host.jpg" alt="Restored 2022 build: two networked players in the level">
+      <div class="body"><span class="tag restored">Restored · 2022 code</span><h3>The original, playable again</h3>
+        <p class="muted">Unity 2020.3 · three small fixes, nothing added. Lobby, rooms and networked movement.</p><span class="btn">Play in browser →</span></div>
+    </a>
+    <a class="card" href="play/2026-upgraded/">
+      <img src="img/upgraded_2026_host_view.jpg" alt="Upgraded build: own third-person camera and health bar">
+      <div class="body"><span class="tag after">Upgraded · Oct 2026</span><h3>Unity 6.3 LTS, with combat</h3>
+        <p class="muted">Own third-person camera, shooting, health, respawn, name tags, unit tests.</p><span class="btn">Play in browser →</span></div>
+    </a>
+    <a class="card" href="play/2022-original-build/">
+      <img src="img/original_2022_build_ingame.jpg" alt="An original 2022 web build of the project">
+      <div class="body"><span class="tag before">Original 2022 web build</span><h3>An earlier build, as found</h3>
+        <p class="muted">A web build from an earlier snapshot of the project, unchanged. Fixed 1920×1024 canvas.</p><span class="btn">Play in browser →</span></div>
+    </a>
+  </section>
+  <p class="muted">Desktop browser needed. First load downloads about 40–56 MB. Multiplayer runs on Photon Cloud's free tier.</p>
+
+  <h2>How to play</h2>
+  <div class="how">
+    <ol>
+      <li>Open a version in <b>two browser tabs</b> (or send the link to a friend).</li>
+      <li>Tab 1: <b>Create Room</b>, type a name, create. Tab 2: <b>Find Room</b>, click the room to join.</li>
+      <li>The host presses <b>Start</b>; both players load into the level.</li>
+      <li>Move: <kbd>W</kbd> forward, <kbd>A</kbd>/<kbd>D</kbd> turn, <kbd>S</kbd> turn around, <kbd>Space</kbd> jump (again in the air to double-jump), mouse to look around.</li>
+      <li>Upgraded version: <b>left-click</b> to shoot at the other player (the crosshair flashes red on a hit); four hits respawn them. <kbd>Esc</kbd> releases the mouse.</li>
+    </ol>
+  </div>
+
+  <h2>Before and after</h2>
+  <div class="table">
+    <table>
+      <tr><th></th><th>2022 source, as committed</th><th>Restored</th><th>Upgraded</th></tr>
+      <tr><td>Two players can play?</td><td class="no">No: the spawned model had no movement script</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+      <tr><td>Each player's camera</td><td class="no">One fixed view for everyone</td><td>Unchanged (known issue)</td><td class="yes">Own third-person camera</td></tr>
+      <tr><td>Combat</td><td class="no">Shooting, health, respawn commented out</td><td>Unchanged</td><td class="yes">Working across two clients</td></tr>
+      <tr><td>Room list</td><td class="no">Rooms could vanish</td><td>Unchanged</td><td class="yes">Full list kept; unit-tested</td></tr>
+      <tr><td>Automated tests</td><td class="no">None</td><td>None</td><td class="yes">6 EditMode tests</td></tr>
+      <tr><td>Engine</td><td>Unity 2020.3.25f1</td><td>Unity 2020.3.49f1 (security patch)</td><td>Unity 6.3 LTS</td></tr>
+    </table>
+  </div>
+
+  <h2>Screenshots</h2>
+  <div class="shots">
+    <figure><img src="img/source_asis_ingame_no_player_control.jpg" alt="2022 source: no controllable character"><figcaption>2022 source as committed: the spawned model has no movement script, so input does nothing.</figcaption></figure>
+    <figure><img src="img/restored_2022_room_two_players.jpg" alt="Restored: room with two players"><figcaption>Restored, host's view: both players in the room.</figcaption></figure>
+    <figure><img src="img/restored_2022_after_move_client2.jpg" alt="Restored: second client sees the host move"><figcaption>Restored, second client: the host's character moved, synced over Photon.</figcaption></figure>
+    <figure class="hud"><img src="img/upgraded_2026_client2_view.jpg" alt="Upgraded: second client's own camera"><figcaption>Upgraded, second client: its own camera following its own character.</figcaption></figure>
+    <figure class="hud"><img src="img/upgraded_2026_host_damaged.png" alt="Upgraded: host health bar after hits"><figcaption>Upgraded: the host's health bar is down after the other player's hits.</figcaption></figure>
+    <figure class="hud"><img src="img/upgraded_2026_host_after_respawn.jpg" alt="Upgraded: host after respawn"><figcaption>Upgraded: after more hits the host respawned at a new point, full health.</figcaption></figure>
+  </div>
+
+  <h2>How the upgrade was done</h2>
+  <div class="cols">
+    <div class="box">
+      <h3>The method</h3>
+      <ul>
+        <li>The untouched original is tag <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/v2022-original"><code>v2022-original</code></a>, backed up before any upgrade work.</li>
+        <li>Restore first, adding nothing: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/restore-2022-playable"><code>restore-2022-playable</code></a>.</li>
+        <li>Then the upgrade: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/ai-upgrade-2026-10"><code>ai-upgrade-2026-10</code></a>, in small labelled commits.</li>
+        <li>Each claim checked against a build, log, test or two-client play test; claims the check contradicted were rewritten or dropped.</li>
+      </ul>
+      <p class="muted" style="margin-top:8px">See every change: <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/compare/v2022-original...ai-upgrade-2026-10">compare the original with the upgrade</a>.</p>
+    </div>
+    <div class="box">
+      <h3>Bugs found and fixed</h3>
+      <ul>
+        <li>The spawned prefab was the art model, with no movement script.</li>
+        <li>A model placed in the level carried its own camera, drawn over the game camera: everyone saw one view and shots missed.</li>
+        <li>The room list redrew only Photon's changes, so rooms could vanish.</li>
+        <li>A loading panel's saved state disagreed with the scene, so it never closed.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Who did what</h3>
+      <ul>
+        <li><b>Me:</b> built the original as a student project in 2022; set the brief and the rules; raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
+        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build scripts and upgrade code; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Also from my degree</h2>
+  <div class="soon">
+    <div class="ph"><b>2D</b><span>coming soon</span></div>
+    <div>
+      <h3>2D game · UECS3173 Programming with Game Engines (group project)</h3>
+      <p>A Unity 2D game: character movement, level design, AI enemies, navigation menus and core game mechanics.</p>
+      <p class="muted">The project archive is being recovered. Screenshots, my part in the group and a playable build will be added here once the files are restored.</p>
+    </div>
+  </div>
+
+  <footer>
+    Tan Carlson · <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP">Source on GitHub</a> · Built with Unity and Photon PUN 2 · October 2026
+  </footer>
+</div>
+</body>
+</html>
