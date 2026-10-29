@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tan Carlson — Game Projects</title>
-<meta name="description" content="Warping Playground, a 2022 Unity + Photon multiplayer game: its design report, plus its prototype restored and upgraded to Unity 6.3 LTS with Claude Code. Playable in the browser.">
+<meta name="description" content="Warping Playground, my 2022 Unity + Photon multiplayer game: the final build, recovered with Claude Code and playable in the browser.">
 <style>
   :root {
     --bg: #0d1117; --panel: #161b22; --panel2: #1c2330; --line: #2d3644; --ink: #e6edf3; --muted: #9aa7b4;
@@ -35,6 +35,12 @@
   .tag { display: inline-block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px;
          padding: 1px 8px; border-radius: 10px; margin-bottom: 6px; }
   .tag.before { color: #ffb4ad; background: #3a1714; } .tag.restored { color: #9ecbff; background: #132339; } .tag.after { color: #8fe2a0; background: #11301b; }
+  a.hero { display: grid; grid-template-columns: 1.4fr 1fr; gap: 0; text-decoration: none; color: var(--ink); background: var(--panel);
+           border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 18px 0 6px; transition: border-color .15s; }
+  a.hero:hover { border-color: var(--accent); }
+  a.hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  a.hero .body { padding: 16px 18px; }
+  @media (max-width: 700px) { a.hero { grid-template-columns: 1fr; } }
   .btn { display: inline-block; margin-top: 8px; font-weight: 600; color: var(--accent); }
 
   .how { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
@@ -74,9 +80,32 @@
 <div class="wrap">
   <header>
     <p class="who">Tan Carlson · Software Engineer · Game projects</p>
-    <h1>Warping Playground: my 2022 multiplayer game, restored and upgraded with an AI coding agent</h1>
-    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. The final project was not recovered, so this page shows it through my report's screenshots. The source I kept is an earlier prototype, so in October 2026 I directed Claude Code to make that prototype playable again with the smallest fixes, then upgrade it to Unity 6.3 LTS.</p>
+    <h1>Warping Playground: my 2022 multiplayer game, playable again</h1>
+    <p class="lead">My final-year project at UTAR (2022): an online multiplayer arena game for 2–4 players in the browser, built in Unity with Photon PUN 2. In October 2026 I directed Claude Code to recover the final build, which no longer played online, without its source code.</p>
   </header>
+
+  <a class="hero" href="play/final-2022/">
+    <img src="img/final/two_players.jpg" alt="The recovered final build: a match with HP and MP bars, timer and scoreboard">
+    <div class="body">
+      <span class="tag after">Final build · August 2022</span>
+      <h3>Play Warping Playground</h3>
+      <p class="muted">The game as I finished it in 2022, recovered in October 2026. One connection setting changed; everything else is the original build.</p>
+      <span class="btn">Play in browser →</span>
+    </div>
+  </a>
+  <p class="muted">Desktop browser needed; the first load downloads about 60 MB. Multiplayer runs on Photon Cloud's free tier.</p>
+
+  <h2>How to play</h2>
+  <div class="how">
+    <ol>
+      <li>Open the game in <b>two browser windows</b> (or send the link to a friend); a room takes 2–4 players.</li>
+      <li>Window 1: <b>Create Room</b>, type a name, create. Window 2: <b>Find Room</b>, click the room to join.</li>
+      <li>The host presses <b>Start Room</b>; a 180-second match begins.</li>
+      <li><kbd>W</kbd> forward, <kbd>Space</kbd> jump, <kbd>S</kbd> turn around; move the mouse to turn the character and its camera.</li>
+      <li>Left click: melee. Right click: throw the blade; right click again calls it back. <kbd>V</kbd>: warp to the stuck blade. <kbd>B</kbd>: laser between you and the blade.</li>
+    </ol>
+    <p class="muted" style="margin:6px 0 0">Controls as described in my 2022 report.</p>
+  </div>
 
   <h2>The game, from my 2022 report</h2>
   <p class="design">Each player is an armoured 3D character with their own camera. A match lasts 180 seconds. Players fight each other and yellow glowing enemies, which spawn every 3–10 seconds and fire purple bullets. The weapon is a blade you can swing, throw into a wall or the floor, warp to, or use as one end of a laser. Defeating an opponent scores +20, an enemy +5, and being defeated costs 10; a ranking board closes the match.</p>
@@ -91,92 +120,39 @@
     <figure><img src="img/report/ranking.jpg" alt="Ranking board after the match" loading="lazy"><figcaption>Ranking board when the timer reaches zero (Fig. 5-11).</figcaption></figure>
   </div>
 
-  <h2>Play it</h2>
-  <section class="play" aria-label="Play">
-    <a class="card" href="play/2022-restored/">
-      <img src="img/restored_2022_character_spawn_host.jpg" alt="Restored prototype: two players' 3D characters">
-      <div class="body"><span class="tag restored">Restored · 2022 code</span><h3>The prototype, playable again</h3>
-        <p class="muted">Unity 2020.3 · small fixes, no new features. The 3D character walks, turns and jumps with its own camera; lobby, rooms, networked movement.</p><span class="btn">Play in browser →</span></div>
-    </a>
-    <a class="card" href="play/2026-upgraded/">
-      <img src="img/upgraded_2026_character_mouse_turn.jpg" alt="Upgraded prototype: the character turned with the mouse">
-      <div class="body"><span class="tag after">Upgraded · Oct 2026</span><h3>The prototype on Unity 6.3 LTS</h3>
-        <p class="muted">Mouse turning as the report describes, a fixed room list, error screens, unit tests.</p><span class="btn">Play in browser →</span></div>
-    </a>
-    <a class="card" href="play/2022-original-build/">
-      <img src="img/original_2022_build_ingame.jpg" alt="An original 2022 web build of the prototype">
-      <div class="body"><span class="tag before">Original 2022 web build</span><h3>An earlier build, as found</h3>
-        <p class="muted">A web build from an earlier snapshot of the prototype, unchanged. Fixed 1920×1024 canvas.</p><span class="btn">Play in browser →</span></div>
-    </a>
-  </section>
-  <p class="muted">Desktop browser needed. The prototype builds download about 40–57 MB on first load. Multiplayer runs on Photon Cloud's free tier.</p>
-
-  <h2>How to play</h2>
-  <div class="how">
-    <ol>
-      <li>Open a version in <b>two browser tabs</b> (or send the link to a friend).</li>
-      <li>Tab 1: <b>Create Room</b>, type a name, create. Tab 2: <b>Find Room</b>, click the room to join.</li>
-      <li>The host presses <b>Start</b>; each player spawns as the 3D character.</li>
-      <li>Move: <kbd>W</kbd> forward, <kbd>A</kbd>/<kbd>D</kbd> turn, <kbd>S</kbd> turn around, <kbd>Space</kbd> jump (again in the air to double-jump).</li>
-      <li>Upgraded prototype: move the mouse to turn. Click to keep the pointer in the game; <kbd>Esc</kbd> releases it.</li>
-    </ol>
-  </div>
-
-  <h2>The prototype, before and after</h2>
-  <div class="table">
-    <table>
-      <tr><th></th><th>2022 source, as committed</th><th>Restored</th><th>Upgraded</th></tr>
-      <tr><td>Your character moves?</td><td class="no">No: the spawned 3D character had no movement script</td><td class="yes">Yes: walk, turn, jump</td><td class="yes">Yes</td></tr>
-      <tr><td>Each player's camera</td><td class="no">One fixed view for everyone</td><td class="yes">Own third-person camera</td><td class="yes">Own third-person camera</td></tr>
-      <tr><td>Mouse turns the character (report design)</td><td class="no">No (no movement at all)</td><td>Unchanged</td><td class="yes">Yes</td></tr>
-      <tr><td>Room list</td><td class="no">Rooms could vanish</td><td>Unchanged</td><td class="yes">Full list kept; unit-tested</td></tr>
-      <tr><td>Disconnect or failed join</td><td class="no">No message</td><td>Unchanged</td><td>Error screens (code-reviewed, not play-tested)</td></tr>
-      <tr><td>Automated tests</td><td class="no">None</td><td>None</td><td class="yes">3 EditMode tests</td></tr>
-      <tr><td>Engine</td><td>Unity 2020.3.25f1</td><td>Unity 2020.3.49f1 (security patch)</td><td>Unity 6.3 LTS</td></tr>
-    </table>
-  </div>
-  <p class="muted" style="margin-top:8px">The final game's combat, enemies and scoring are not in the prototype's source, so neither prototype version has them; the report figures above show them.</p>
-
-  <h2>Screenshots of the prototype</h2>
+  <h2>How the final build was recovered</h2>
   <div class="shots">
-    <figure><img src="img/source_asis_ingame_no_player_control.jpg" alt="2022 source: no controllable character" loading="lazy"><figcaption>2022 source as committed: the spawned character has no movement script, so input does nothing.</figcaption></figure>
-    <figure><img src="img/restored_2022_character_spawn_host.jpg" alt="Restored: both players as the 3D character" loading="lazy"><figcaption>Restored, host: both players spawn as the 3D character.</figcaption></figure>
-    <figure><img src="img/restored_2022_character_turn_walk_client2.jpg" alt="Restored: second client turned and walked" loading="lazy"><figcaption>Restored, second client: turned with <kbd>D</kbd>, walked with <kbd>W</kbd>; its own camera follows.</figcaption></figure>
-    <figure><img src="img/restored_2022_character_jump.jpg" alt="Restored: the character mid-jump" loading="lazy"><figcaption>Restored: mid-jump, the shadow stays on the ground.</figcaption></figure>
-    <figure><img src="img/upgraded_2026_character_mouse_turn.jpg" alt="Upgraded: turned with the mouse" loading="lazy"><figcaption>Upgraded: moving the mouse turned the character and its camera.</figcaption></figure>
-    <figure><img src="img/upgraded_2026_character_turn180_jump.jpg" alt="Upgraded: turned around and jumping" loading="lazy"><figcaption>Upgraded: <kbd>S</kbd> turned it around and <kbd>Space</kbd> jumped.</figcaption></figure>
+    <figure><img src="img/final/menu.jpg" alt="Recovered build: start menu" loading="lazy"><figcaption>Recovered build, start menu, connected to Photon (29 Oct 2026).</figcaption></figure>
+    <figure><img src="img/final/match.jpg" alt="Recovered build: a match in progress" loading="lazy"><figcaption>A match in the recovered build: HP and MP bars, timer, scoreboard.</figcaption></figure>
   </div>
-
-  <h2>How the upgrade was done</h2>
-  <div class="cols">
+  <div class="cols" style="margin-top:14px">
     <div class="box">
-      <h3>The method</h3>
+      <h3>What was wrong, and the fix</h3>
       <ul>
-        <li>The untouched original is tag <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/v2022-original"><code>v2022-original</code></a>, backed up before any upgrade work.</li>
-        <li>Restore with no new features: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/restore-2022-playable"><code>restore-2022-playable</code></a>.</li>
-        <li>The upgrade: branch <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/ai-upgrade-2026-10"><code>ai-upgrade-2026-10</code></a>, which starts from the restore's first fix, in small labelled commits.</li>
-        <li>Each claim checked against a build, log, test or two-client play test; claims the check contradicted were rewritten or dropped.</li>
+        <li>In 2022 I published the final build on Unity Play (the link is in my report). By 2026 it no longer played, and the final project's source was not recovered.</li>
+        <li>Claude Code downloaded my build files (31 MB, built 15 Aug 2022) and ran them locally: they worked over plain http.</li>
+        <li>Root cause: the game connects to Photon over plain <code>ws://</code>, which browsers block on https pages such as Unity Play and GitHub Pages.</li>
+        <li>Redirecting the connection to <code>wss://</code> in the page failed: the server rejected the login, because the game still used the plain-ws handshake.</li>
+        <li>Fix: one value in the build's Photon settings, protocol 4 (WebSocket) → 5 (WebSocketSecure), patched in the packed data file. No source code was needed.</li>
       </ul>
-      <p class="muted" style="margin-top:8px">See every change: <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/compare/v2022-original...ai-upgrade-2026-10">compare the original with the upgrade</a>.</p>
     </div>
     <div class="box">
-      <h3>Bugs found and fixed</h3>
+      <h3>Checks</h3>
       <ul>
-        <li>The spawned 3D character had no movement script or follow camera; both sat on a test prefab.</li>
-        <li>A copy of the character placed in the level carried its own camera, drawn over the game camera, so everyone saw one fixed view.</li>
-        <li>The room list redrew only Photon's changes, so rooms could vanish.</li>
-        <li>A loading panel's saved state disagreed with the scene, so it never closed.</li>
-        <li>Movement added in code took the script's defaults, so jumps floated; the prototype's own tuning is copied over.</li>
+        <li>The game now connects to Photon's servers over <code>wss://</code>.</li>
+        <li>Played in a browser: menu, room, start, and a match with HP and MP bars, the 180-second timer and enemy fire.</li>
+        <li>The original download and an unpatched copy are kept with SHA-256 hashes; the patch tool is <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/main/tools/recover_final_build">on GitHub</a>.</li>
       </ul>
     </div>
     <div class="box">
       <h3>Who did what</h3>
       <ul>
-        <li><b>Me:</b> built the game in 2022; set the brief and the rules; caught that the agent's first fix made a test capsule the player instead of the 3D character, and had it read my report and redo the work (it also removed shooting it had added to the upgrade, which the design doesn't have); raised the security-alert question that moved the restore to the patched editor; installed the editors and approved the versions.</li>
-        <li><b>Claude Code:</b> found the bugs in code, scene and prefab files; wrote the fixes, unit tests, build and setup scripts; connected to the live Unity editor through MCP for Unity; ran the builds and the two-client play tests.</li>
+        <li><b>Me:</b> built the game in 2022; found that the Unity Play copy no longer played; asked for the build to be recovered; chose to show the final game.</li>
+        <li><b>Claude Code:</b> downloaded and unpacked the build, traced the failure to the connection protocol, wrote the patch tool and tested the result in a browser.</li>
       </ul>
     </div>
   </div>
+  <p class="muted" style="margin-top:10px">The source code I kept is an earlier prototype of the game. Claude Code also restored it and upgraded it to Unity 6.3 LTS; the changes are on GitHub: <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/compare/v2022-original...ai-upgrade-2026-10">compare the original with the upgrade</a>.</p>
 
   <h2>Also from my degree</h2>
   <a class="also" href="2d/">
