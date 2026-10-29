@@ -38,3 +38,9 @@ The untouched 2022 original is still tag `v2022-original`, and the original 2022
 | Move and jump (client 1) | Pass: client 2 sees client 1's character move |
 
 Screenshots: `game_portfolio/evidence/restored_2022_*.jpg`.
+
+## Known issue left as found (fixed in the upgrade branch)
+
+The camera does not follow your own character. The Game scene holds a copy of the armour model whose own
+Camera (depth 0) draws over the Cinemachine-driven Main Camera (depth -1), so every client sees the same fixed
+overview. The game is still playable from that view, so the restore leaves it alone; `ai-upgrade-2026-10` fixes it.
