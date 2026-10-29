@@ -9,4 +9,7 @@ same Photon PUN 2.40, no new features. Only what stops the original from being p
 | 2 | Every player spawns at (0,0,0), so a second player starts inside the first. | `PlayerManager.CreateController` | Small random offset (±3 m). |
 | 3 | "Loading" stays visible behind the title menu. The Loading panel starts active but its `open` flag is saved as false, so `OpenMenu("title")` never closes it. | Screenshot of the 2022 WebGL build; `Menu.unity` (`menuName: loading`, `open: 0`) | `Launcher.Start` opens the Loading menu through `MenuManager`, so the flag and the panel agree. |
 
+Build tooling (no gameplay change): `Assets/Editor/PortfolioBuild.cs` makes the WebGL build from the command line.
+It sets a 1280x720 canvas (the 2022 build was a fixed 1920x1024) and uncompressed output, so the build runs from any static web host.
+
 Verification status: not yet verified in the editor or in a build.
