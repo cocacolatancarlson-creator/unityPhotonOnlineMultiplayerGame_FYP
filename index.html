@@ -56,10 +56,12 @@
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
   .box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
 
-  .soon { display: grid; grid-template-columns: 160px 1fr; gap: 16px; background: var(--panel); border: 1px dashed var(--warn); border-radius: 10px; padding: 14px; }
-  .soon .ph { border-radius: 8px; background: var(--warnbg); color: var(--warn); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; font-weight: 700; }
-  .soon .ph b { font-size: 34px; letter-spacing: 3px; }
-  @media (max-width: 560px) { .soon { grid-template-columns: 1fr; } }
+  a.also { display: grid; grid-template-columns: 300px 1fr; gap: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+           padding: 14px; text-decoration: none; color: var(--ink); transition: border-color .15s, transform .15s; }
+  a.also:hover { border-color: var(--accent); transform: translateY(-2px); }
+  a.also img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); display: block; background: #222; }
+  .tag.report { color: #f2cc60; background: var(--warnbg); }
+  @media (max-width: 560px) { a.also { grid-template-columns: 1fr; } }
 
   footer { margin: 44px 0 30px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 </style>
@@ -156,14 +158,16 @@
   </div>
 
   <h2>Also from my degree</h2>
-  <div class="soon">
-    <div class="ph"><b>2D</b><span>coming soon</span></div>
+  <a class="also" href="2d/">
+    <img src="2d/img/level4_boss.jpg" alt="The 2D game's level 4: the ninja, the boss and the slot machine" loading="lazy">
     <div>
-      <h3>2D game · UECS3173 Programming with Game Engines (group project)</h3>
-      <p>A Unity 2D game: character movement, level design, AI enemies, navigation menus and core game mechanics.</p>
-      <p class="muted">The project archive is being recovered. Screenshots, my part in the group and a playable build will be added here once the files are restored.</p>
+      <span class="tag report">2021 · report screenshots</span>
+      <h3>2D action platformer · UECS3173 Programming with Game Engine (group of four)</h3>
+      <p>"Coca Cola": a female ninja fights through four levels of moving platforms to a boss that teleports, with a slot machine that heals, buffs or swaps the weapon. As Designer I built the movement and double-jump physics, the slot machine and the audio.</p>
+      <p class="muted">Not playable: the project files are not available, so the page shows screenshots from the group's 2021 report.</p>
+      <span class="btn">See the 2D game →</span>
     </div>
-  </div>
+  </a>
 
   <footer>
     Tan Carlson · <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP">Source on GitHub</a> · Built with Unity and Photon PUN 2 · October 2026
