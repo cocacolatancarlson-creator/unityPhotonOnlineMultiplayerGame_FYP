@@ -1942,9 +1942,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 817269828023168386}
-  _gravity: 1
-  _jumpSpeed: 20
-  _doubleJumpMultiplier: 5
+  _gravity: 10
+  _jumpSpeed: 7
+  _doubleJumpMultiplier: 1.5
   speed: 6
   stop: 0
   turnSpeed: 90

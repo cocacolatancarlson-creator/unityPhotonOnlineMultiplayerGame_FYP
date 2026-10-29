@@ -33,10 +33,14 @@ public static class RestoreSetup
 			cc.center = root.transform.InverseTransformPoint(b.center);
 			Debug.Log($"RestoreSetup: character bounds size {b.size}, center {b.center}, controller h={cc.height:F2} r={cc.radius:F2}");
 
-			// The prototype's own movement script, pointed at that controller.
+			// The prototype's own movement script with the prototype's own tuning (gravity 10, jump 7,
+			// double jump x1.5; the script defaults float for seconds), pointed at that controller.
 			PlayerMovement move = root.GetComponent<PlayerMovement>();
 			if (move == null) move = root.AddComponent<PlayerMovement>();
+			PlayerMovement tuned = test.GetComponentInChildren<PlayerMovement>(true);
+			if (tuned != null) EditorUtility.CopySerialized(tuned, move);
 			move.characterController = cc;
+			Debug.Log($"RestoreSetup: movement tuning copied from the test prefab: {tuned != null}");
 
 			// The prototype's third-person camera rig, re-targeted at the character.
 			if (root.GetComponentInChildren<CinemachineFreeLook>(true) == null)
