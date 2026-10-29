@@ -25,17 +25,17 @@ public class PlayerManager : MonoBehaviour
 
 	void CreateController()
 	{
-		// "Player2" carries PlayerMovement + the FreeLook camera; the random offset keeps players apart.
-		// The manager's ViewID travels as instantiation data so the character can find its manager to respawn.
+		//Transform spawnpoint = SpawnManager.Instance.GetSpawnpoint();
+		//controller = 
+		// Spawn the 3D character ("Player"), as the FYP report describes; Editor/UpgradeSetup.cs gives it the
+		// prototype's movement and camera. Small random offset so two CharacterControllers don't overlap.
 		Vector3 spawn = new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f));
-		controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player2"), spawn, Quaternion.identity,
-			0, new object[] { PV.ViewID });
+		PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), spawn, Quaternion.identity);
 	}
 
-	// Finishes the respawn that the 2022 code had commented out.
-	public void Die()
+	/*public void Die()
 	{
 		PhotonNetwork.Destroy(controller);
 		CreateController();
-	}
+	}*/
 }

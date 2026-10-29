@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 6f;
     public float stop = 0f;
     public float turnSpeed = 90f;
+    // FYP report 5.2.5: moving the mouse turns the character (and its camera) left or right.
+    public float mouseTurnSpeed = 3f;
     private bool _canDoubleJump = false;
     Vector3 playerMovement;
     PhotonView PV;
@@ -91,6 +93,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         transform.Rotate(Vector3.up, Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime);
+
+        // Mouse turning, as the report describes. A click locks the pointer to the game so the mouse can keep
+        // turning without leaving the window (Esc releases it in the browser).
+        transform.Rotate(Vector3.up, Input.GetAxis("Mouse X") * mouseTurnSpeed);
+        if (Input.GetMouseButtonDown(0))
+            Cursor.lockState = CursorLockMode.Locked;
 
 
 

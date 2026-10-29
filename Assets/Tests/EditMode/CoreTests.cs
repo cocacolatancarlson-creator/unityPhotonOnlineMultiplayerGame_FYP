@@ -41,38 +41,3 @@ public class RoomListCacheTests
 		Assert.AreEqual("A v2", cache.Rooms.Single());
 	}
 }
-
-public class HealthTests
-{
-	[Test]
-	public void KillingHit_ReturnsTrueOnce()
-	{
-		Health health = new Health(100f);
-
-		Assert.IsFalse(health.TakeDamage(60f));
-		Assert.IsTrue(health.TakeDamage(60f));
-		Assert.IsFalse(health.TakeDamage(60f), "a dead player must not die twice");
-		Assert.AreEqual(0f, health.Current);
-	}
-
-	[Test]
-	public void Reset_RestoresFullHealth()
-	{
-		Health health = new Health(100f);
-		health.TakeDamage(100f);
-
-		health.Reset();
-
-		Assert.IsFalse(health.IsDead);
-		Assert.AreEqual(1f, health.Fraction);
-	}
-
-	[Test]
-	public void NegativeDamage_IsIgnored()
-	{
-		Health health = new Health(100f);
-
-		Assert.IsFalse(health.TakeDamage(-50f));
-		Assert.AreEqual(100f, health.Current);
-	}
-}

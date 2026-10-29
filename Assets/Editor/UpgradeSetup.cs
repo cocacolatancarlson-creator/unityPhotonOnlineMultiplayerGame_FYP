@@ -1,60 +1,95 @@
-using TMPro;
+using Cinemachine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.UI;
 
 // One-off, repeatable edits for the AI-assisted upgrade, kept as code so the change is reviewable.
-//   Menu: Portfolio > Wire Player Combat, or -executeMethod UpgradeSetup.WirePlayerCombat
+//   Menu: Portfolio > Make 3D Character Playable, or -executeMethod UpgradeSetup.MakeCharacterPlayable
 public static class UpgradeSetup
 {
-	const string PlayerPrefab = "Assets/Resources/PhotonPrefabs/Player2.prefab";
+	const string CharacterPrefab = "Assets/Resources/PhotonPrefabs/Player.prefab";
+	const string TestPrefab = "Assets/Resources/PhotonPrefabs/Player2.prefab";
+	const string GameScene = "Assets/Scenes/Game.unity";
 
-	[MenuItem("Portfolio/Wire Player Combat")]
-	public static void WirePlayerCombat()
+	// The FYP report's player is the armoured 3D character ("Player"), which the code already spawns, but that
+	// prefab never got movement or a follow camera. This wires the prototype's own PlayerMovement (with the
+	// prototype's tuning) and third-person FreeLook camera (from the test prefab "Player2") onto it.
+	// Same steps as RestoreSetup on the restore branch.
+	[MenuItem("Portfolio/Make 3D Character Playable")]
+	public static void MakeCharacterPlayable()
 	{
-		GameObject root = PrefabUtility.LoadPrefabContents(PlayerPrefab);
+		GameObject test = PrefabUtility.LoadPrefabContents(TestPrefab);
+		GameObject root = PrefabUtility.LoadPrefabContents(CharacterPrefab);
 		try
 		{
-			PlayerCombat combat = root.GetComponent<PlayerCombat>();
-			if (combat == null)
+			// Size a CharacterController to the character's mesh.
+			Bounds b = new Bounds(root.transform.position, Vector3.zero);
+			foreach (Renderer r in root.GetComponentsInChildren<Renderer>(true)) b.Encapsulate(r.bounds);
+			float s = Mathf.Max(root.transform.lossyScale.y, 0.0001f);
+			// Explicit == null checks: Unity's "fake null" objects slip past the ?? operator in the editor.
+			CharacterController cc = root.GetComponent<CharacterController>();
+			if (cc == null) cc = root.AddComponent<CharacterController>();
+			cc.height = b.size.y / s;
+			cc.radius = Mathf.Clamp(Mathf.Min(b.size.x, b.size.z) / (2f * s), 0.2f / s, cc.height / 2f);
+			cc.center = root.transform.InverseTransformPoint(b.center);
+			Debug.Log($"UpgradeSetup: character bounds size {b.size}, center {b.center}, controller h={cc.height:F2} r={cc.radius:F2}");
+
+			// The prototype's movement script with the prototype's tuning (the script defaults float for seconds).
+			PlayerMovement move = root.GetComponent<PlayerMovement>();
+			if (move == null) move = root.AddComponent<PlayerMovement>();
+			PlayerMovement tuned = test.GetComponentInChildren<PlayerMovement>(true);
+			if (tuned != null) EditorUtility.CopySerialized(tuned, move);
+			move.characterController = cc;
+			Debug.Log($"UpgradeSetup: movement tuning copied from the test prefab: {tuned != null}");
+
+			// The prototype's third-person camera rig, re-targeted at the character.
+			if (root.GetComponentInChildren<CinemachineFreeLook>(true) == null)
 			{
-				combat = root.AddComponent<PlayerCombat>();
+				CinemachineFreeLook source = test.GetComponentInChildren<CinemachineFreeLook>(true);
+				GameObject rig = Object.Instantiate(source.gameObject, root.transform, false);
+				rig.name = source.gameObject.name;
+				CinemachineFreeLook freeLook = rig.GetComponent<CinemachineFreeLook>();
+				freeLook.Follow = root.transform;
+				freeLook.LookAt = root.transform;
 			}
 
-			Transform hud = root.transform.Find("HUD");
-			if (hud == null)
+			// The character carried its own Camera (depth 0). With several players spawned, those cameras
+			// fight over the screen; the scene's Main Camera, driven by each player's FreeLook, renders instead.
+			foreach (Camera cam in root.GetComponentsInChildren<Camera>(true))
 			{
-				hud = BuildHud(root.transform);
+				cam.enabled = false;
+				Debug.Log("UpgradeSetup: disabled the character's own camera on " + cam.gameObject.name);
 			}
 
-			SerializedObject so = new SerializedObject(combat);
-			so.FindProperty("hud").objectReferenceValue = hud.gameObject;
-			so.FindProperty("healthBar").objectReferenceValue = hud.Find("HealthBar/Fill").GetComponent<Image>();
-			so.FindProperty("crosshair").objectReferenceValue = hud.Find("Crosshair").GetComponent<Image>();
-			so.ApplyModifiedPropertiesWithoutUndo();
-
-			if (root.transform.Find("NameTag") == null)
-			{
-				BuildNameTag(root.transform);
-			}
-
-			PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefab);
+			PrefabUtility.SaveAsPrefabAsset(root, CharacterPrefab);
 		}
 		finally
 		{
 			PrefabUtility.UnloadPrefabContents(root);
+			PrefabUtility.UnloadPrefabContents(test);
 		}
-		Debug.Log("UpgradeSetup: PlayerCombat and HUD wired on " + PlayerPrefab);
+
+		// The Game scene also holds a static copy of the character placed in the level. Now that the
+		// character is the player, that copy looks like an extra player, so it is switched off.
+		var scene = EditorSceneManager.OpenScene(GameScene, OpenSceneMode.Single);
+		foreach (Camera cam in Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+		{
+			if (cam.CompareTag("MainCamera")) continue;
+			GameObject placed = PrefabUtility.GetOutermostPrefabInstanceRoot(cam.gameObject);
+			if (placed == null) placed = cam.gameObject;
+			placed.SetActive(false);
+			Debug.Log("UpgradeSetup: switched off the static character placed in the level: " + placed.name);
+		}
+		EditorSceneManager.SaveScene(scene);
 	}
 
 	// The Game scene holds a copy of the armour model whose own Camera (depth 0) draws over the
-	// Cinemachine-driven Main Camera (depth -1): every client saw the same fixed view, and the
-	// crosshair did not line up with Camera.main. Only the Main Camera should render.
+	// Cinemachine-driven Main Camera (depth -1): every client saw the same fixed view.
+	// Only the Main Camera should render. (Applied on 29 Oct; MakeCharacterPlayable now also hides that copy.)
 	[MenuItem("Portfolio/Disable Stray Scene Cameras")]
 	public static void DisableStrayCameras()
 	{
-		UnityEngine.SceneManagement.Scene scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
-			"Assets/Scenes/Game.unity", UnityEditor.SceneManagement.OpenSceneMode.Single);
+		UnityEngine.SceneManagement.Scene scene = EditorSceneManager.OpenScene(GameScene, OpenSceneMode.Single);
 		foreach (Camera cam in Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
 		{
 			if (cam.CompareTag("MainCamera") || !cam.enabled)
@@ -62,73 +97,6 @@ public static class UpgradeSetup
 			cam.enabled = false;
 			Debug.Log("UpgradeSetup: disabled stray camera on " + cam.gameObject.name);
 		}
-		UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
-	}
-
-	static Transform BuildHud(Transform parent)
-	{
-		Sprite uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-
-		GameObject hud = new GameObject("HUD", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
-		hud.transform.SetParent(parent, false);
-		hud.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-		CanvasScaler scaler = hud.GetComponent<CanvasScaler>();
-		scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-		scaler.referenceResolution = new Vector2(1280, 720);
-
-		// Crosshair: a small dot in the middle of the screen, where the hitscan ray goes.
-		Image dot = NewImage("Crosshair", hud.transform, uiSprite, new Color(1f, 1f, 1f, 0.9f));
-		RectTransform dotRect = dot.rectTransform;
-		dotRect.anchorMin = dotRect.anchorMax = new Vector2(0.5f, 0.5f);
-		dotRect.sizeDelta = new Vector2(8f, 8f);
-
-		// Health bar: bottom-left, a dark frame with a green fill.
-		Image frame = NewImage("HealthBar", hud.transform, uiSprite, new Color(0f, 0f, 0f, 0.6f));
-		RectTransform frameRect = frame.rectTransform;
-		frameRect.anchorMin = frameRect.anchorMax = new Vector2(0f, 0f);
-		frameRect.pivot = new Vector2(0f, 0f);
-		frameRect.anchoredPosition = new Vector2(24f, 24f);
-		frameRect.sizeDelta = new Vector2(300f, 22f);
-
-		Image fill = NewImage("Fill", frame.transform, uiSprite, new Color(0.25f, 0.85f, 0.35f, 1f));
-		fill.type = Image.Type.Filled;
-		fill.fillMethod = Image.FillMethod.Horizontal;
-		fill.fillAmount = 1f;
-		RectTransform fillRect = fill.rectTransform;
-		fillRect.anchorMin = Vector2.zero;
-		fillRect.anchorMax = Vector2.one;
-		fillRect.offsetMin = new Vector2(3f, 3f);
-		fillRect.offsetMax = new Vector2(-3f, -3f);
-
-		return hud.transform;
-	}
-
-	static void BuildNameTag(Transform parent)
-	{
-		GameObject go = new GameObject("NameTag", typeof(TextMeshPro));
-		go.transform.SetParent(parent, false);
-		go.transform.localPosition = new Vector3(0f, 1.5f, 0f);   // just above the 2 m capsule
-		TextMeshPro text = go.GetComponent<TextMeshPro>();
-		text.rectTransform.sizeDelta = new Vector2(4f, 0.6f);
-		text.fontSize = 3f;
-		text.alignment = TextAlignmentOptions.Center;
-		text.color = Color.white;
-		text.text = "Player";
-
-		NameTag tag = go.AddComponent<NameTag>();
-		SerializedObject so = new SerializedObject(tag);
-		so.FindProperty("label").objectReferenceValue = text;
-		so.ApplyModifiedPropertiesWithoutUndo();
-	}
-
-	static Image NewImage(string name, Transform parent, Sprite sprite, Color color)
-	{
-		GameObject go = new GameObject(name, typeof(RectTransform), typeof(Image));
-		go.transform.SetParent(parent, false);
-		Image image = go.GetComponent<Image>();
-		image.sprite = sprite;
-		image.color = color;
-		image.raycastTarget = false;
-		return image;
+		EditorSceneManager.SaveScene(scene);
 	}
 }
