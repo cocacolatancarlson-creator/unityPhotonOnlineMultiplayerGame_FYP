@@ -16,8 +16,8 @@ public static class PortfolioBuild
 		PlayerSettings.defaultWebScreenHeight = 720;
 		// Uncompressed files run from any static host without Content-Encoding headers.
 		PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
-		// The armour model's 95 texture maps sit in Resources, so they ship even when unused:
-		// at 2048 px they made a 138 MB download. Web builds only; other platforms keep full size.
+		// The armour model's 95 texture maps sit in Resources and a copy of the model stands in the Game scene:
+		// at 2048 px the WebGL data file was ~141 MB. Web builds only; other platforms keep full size.
 		CapWebTextures("Assets/Resources/PhotonPrefabs/Player", 512);
 
 		BuildPlayerOptions options = new BuildPlayerOptions

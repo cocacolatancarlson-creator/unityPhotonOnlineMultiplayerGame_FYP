@@ -21,8 +21,9 @@ The untouched 2022 original is still tag `v2022-original`, and the original 2022
 
 `Assets/Editor/PortfolioBuild.cs` makes the WebGL build from the command line:
 - 1280x720 canvas (the 2022 build was a fixed 1920x1024) and uncompressed output, so it runs from any static web host.
-- WebGL-only texture cap of 512 px on the armour model's 95 maps in `Resources`. They ship even though the
-  restored game does not spawn that model; at 2048 px the download was 138 MB, now 19 MB.
+- WebGL-only texture cap of 512 px on the armour model's 95 maps in `Resources`. The model is not the spawned
+  player, but a copy of it stands in the Game scene, so the maps ship; at 2048 px the WebGL data file was about
+  141.6 MB (138,268 KiB), now 20.1 MB (20,061,820 bytes).
   The `.meta` files gain a WebGL platform override; other platforms keep full size.
 
 ## Verification (29 Oct 2026, two browser tabs on one PC, Photon Cloud)
