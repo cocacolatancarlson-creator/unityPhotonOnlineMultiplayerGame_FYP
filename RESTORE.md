@@ -45,5 +45,7 @@ Earlier capsule-based screenshots (superseded on 29 Oct) are kept in `evidence/_
 ## What the restore does not add
 
 The final Warping Playground features in the report (melee, throw and recall, warp, laser, enemies, timer,
-scoring, ranking board) are not in this prototype's source, and the final project files were not recovered.
-The restore makes the prototype that exists playable; it does not recreate the missing final build.
+scoring, ranking board) are not in this prototype's source, and the final project's source was not recovered.
+A WebGL build titled "WarpingPlaygroundTemp" (uploaded 15 Aug 2022) is still listed on Unity Play at the link in
+report section 5.2.10: https://play.unity.com/mg/other/mytempbuild-2. The restore makes the prototype that
+exists playable; it does not recreate the final game.
