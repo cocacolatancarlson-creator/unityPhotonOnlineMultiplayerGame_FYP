@@ -215,12 +215,25 @@
   </section>
 
   <section class="stage">
-    <h3><span class="num">7</span> Gate G1: publish <span class="tag human">me</span></h3>
+    <h3><span class="num">7</span> Gate G1: publish <span class="tag script">API</span><span class="tag human">me</span></h3>
     <ul>
       <li>I got the review package: the video in six phone-size parts, the QC report, and a review note that offered a fix for A8_18 (re-voice and rebuild, about an hour). I replied "yes, upload - private, with thumbnail #4", so A8_18 stayed as it was.</li>
-      <li>The pipeline only uploads videos as private; I published it myself in YouTube Studio the same day.</li>
+      <li>My rule for publishing: if the YouTube API can do a step, Claude Code does it and reads the result back; if only YouTube Studio can, Claude Code gives me a short list and I do it by hand. The table below shows how that split for this video.</li>
       <li>After publishing, I picked a new hook-first title, which was applied through the API. The next day I asked for more eye-catching thumbnails, then said the colours still felt low-energy. From the next round I picked a split design, asked for a different frame, and picked its hearts-frame variant. Each change was set through the API and read back.</li>
     </ul>
+    <div class="table">
+      <table>
+        <thead><tr><th>Step</th><th>Who</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>Upload the video as private, with thumbnail #4, the title, description, chapters and an English title, then read them back (the served thumbnail matched the file)</td><td>Claude Code</td><td>YouTube Data API</td></tr>
+          <tr><td>YouTube's copyright check, the game-title field, and checking the AI-content label (the API sets it at upload but does not return it)</td><td>Me</td><td>YouTube Studio; the API does not cover these</td></tr>
+          <tr><td>Make the video public, after the Studio steps</td><td>Me</td><td>YouTube Studio, the same day</td></tr>
+          <tr><td>The new title, then the new thumbnails, each read back</td><td>Claude Code, on my picks</td><td>YouTube Data API</td></tr>
+          <tr><td>33 Shorts of 37–44 seconds made from this video's script and footage (by 30 Oct): upload each, schedule it to go public about 20 minutes later, read it back, and check it is live</td><td>Claude Code, after my yes to each upload</td><td>YouTube Data API</td></tr>
+          <tr><td>Link each Short to this video (the related-video field)</td><td>Me</td><td>YouTube Studio; the API does not cover it</td></tr>
+        </tbody>
+      </table>
+    </div>
     <figure>
       <img src="img/thumbs.jpg" alt="Two thumbnail options with their text pixelated: the hero and the frozen girl in a freezer, and a retro sunburst poster" width="1292" height="360" loading="lazy">
       <figcaption>Two options from the sheet of 9 that I did not pick; all text is pixelated. No thumbnail that was ever on the video is shown, because it would lead to the video.</figcaption>
@@ -272,7 +285,8 @@
         <li>For this video: picked the game and the footage to work from, and said yes to the download.</li>
         <li>Answered G0: use the official Chinese names from the game's store page, and "call it <span lang="zh-Hans">一个声音</span> and don't guess".</li>
         <li>Picked answers for the six points the agents could not settle.</li>
-        <li>Said "yes, upload" without the A8_18 fix, picked the thumbnail, and published the video myself.</li>
+        <li>Said "yes, upload" without the A8_18 fix, picked the thumbnail, did the Studio-only steps and published the video myself.</li>
+        <li>Said yes to each Short upload and linked each Short to the video in Studio.</li>
         <li>After publishing: picked the new title, asked for more eye-catching thumbnails, and picked the final one.</li>
       </ul>
     </div>
@@ -280,7 +294,8 @@
       <h3>Claude Code and its agents</h3>
       <ul>
         <li>Built the pipeline to my direction: the scripts, the agent workflows, and the lint, audit and QC checks.</li>
-        <li>Ran the stages of this video: the question sheet, the reading, the script, the quiz and audit, the voice, the build, the QC, the thumbnail options, the private upload and the API read-backs.</li>
+        <li>Ran the stages of this video: the question sheet, the reading, the script, the quiz and audit, the voice, the build, the QC, the thumbnail options, the private upload with its thumbnail and metadata through the YouTube Data API, the later title and thumbnail changes through the API, and the read-backs.</li>
+        <li>Made 33 Shorts from the video's script and footage and published them through the API: each uploaded, scheduled to go public, read back and checked live.</li>
         <li>Did the frame checks behind the review points and the narrowed lines shown above.</li>
       </ul>
       <p class="muted" style="margin:8px 0 0">I did not write the pipeline's code or read the four hours of footage. My part is the decisions on the left.</p>
