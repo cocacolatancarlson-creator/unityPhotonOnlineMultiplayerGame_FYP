@@ -15,7 +15,7 @@
   body { font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; }
   a { color: var(--accent); }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
-  header { padding: 40px 0 18px; border-bottom: 1px solid var(--line); }
+  header { padding: 18px 0 18px; border-bottom: 1px solid var(--line); }
   header .who { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
   h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0 0 10px; }
   .lead { color: var(--muted); max-width: 760px; margin: 0; }
@@ -73,11 +73,58 @@
   .tag.report { color: #f2cc60; background: var(--warnbg); }
   @media (max-width: 560px) { a.also { grid-template-columns: 1fr; } }
 
+  /* Short version, 2026-10-31: project nav, an "At a glance" block on top, the detail folded below it. */
+  .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 14px 0 0; font-size: 14px; }
+  .nav span { color: var(--muted); }
+  .nav a { text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .nav a[aria-current="page"] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--accent); }
+  .glance { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 16px 18px; margin: 22px 0 0; }
+  .glance > h2 { font-size: 20px; margin: 0 0 6px; }
+  .oneline { font-size: 18px; margin: 0 0 14px; }
+  .hl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 10px; margin: 0 0 14px; }
+  .hl > div { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .hl b { display: block; font-size: 22px; line-height: 1.25; color: var(--accent); }
+  .hl .gate { border-color: var(--warn); }
+  .hl .gate b { color: #f2cc60; }
+  .hl p { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+  .glance .chip { white-space: normal; }
+  .pics2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; align-items: start; }
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; margin: 14px 0 0; }
+  .pics2 .roles { margin: 0; }
+  .roles > div { border-top: 3px solid var(--line); padding-top: 8px; font-size: 15px; }
+  .roles .me { border-color: var(--warn); }
+  .roles .ai { border-color: #8957e5; }
+  .roles h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin: 0 0 4px; }
+  .roles p { margin: 0; }
+  .detail-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin: 40px 0 10px; }
+  .detail-head h2 { margin: 0; }
+  .toggle { background: var(--panel2); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+  .toggle:hover { border-color: var(--accent); }
+  details.more { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 10px; }
+  details.more > summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 12px 16px; font-size: 18px; font-weight: 600; }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "\25B8"; display: inline-block; width: 14px; color: var(--accent); transition: transform .15s; }
+  details.more[open] > summary::before { transform: rotate(90deg); }
+  details.more > summary:hover { color: var(--accent); }
+  details.more > summary .gist { flex-basis: 100%; padding-left: 22px; font-size: 14px; font-weight: 400; color: var(--muted); }
+  details.more > .in { padding: 2px 18px 16px; }
+  details.more .box, details.more .best div, details.more .facts div { background: var(--bg); }
+  details.more th { background: var(--panel2); }
+  .cards { display: grid; gap: 12px; }
+
   footer { margin: 44px 0 30px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <nav class="nav" aria-label="Projects">
+    <span>Tan Carlson · projects:</span>
+    <a href="story-factory/">1 · AI video pipeline</a>
+    <a href="live-automation/">2 · Live streaming with an AI co-host</a>
+    <a href="./" aria-current="page">3 · Unity game (play it)</a>
+    <a href="2d/">2D game, 2021</a>
+  </nav>
   <header>
     <p class="who">Tan Carlson · Software Engineer · Game projects</p>
     <h1>Warping Playground: my 2022 multiplayer game, playable again</h1>
@@ -95,6 +142,21 @@
   </a>
   <p class="muted">Desktop browser needed; the first load downloads about 60 MB. Multiplayer runs on Photon Cloud's free tier.</p>
 
+  <section class="glance" aria-labelledby="glance-h">
+    <h2 id="glance-h">At a glance</h2>
+    <p class="oneline">My 2022 game had stopped working on the site where I published it. Claude Code found the cause and fixed it inside the packed game, without the source code.</p>
+    <div class="hl">
+      <div><b>Stopped working</b><p>The build I published in 2022 no longer plays on that site, and the final source code was not recovered.</p></div>
+      <div><b>Insecure connection</b><p>The likely cause: it connected over plain <code>ws://</code>, which browsers block on secure https pages.</p></div>
+      <div><b>1 setting changed</b><p>Claude Code switched that setting inside the packed game to the secure <code>wss://</code>. Nothing else in the game was modified.</p></div>
+      <div><b>Plays again</b><p>It connects and runs a match in the browser (a single-player test of about 35 s); two-player play is not re-tested yet.</p></div>
+    </div>
+    <div class="roles">
+      <div class="me"><h3>Me</h3><p>Built the game in 2022, found that it no longer played, asked for it to be recovered and chose to show the final game.</p></div>
+      <div class="ai"><h3>Claude Code</h3><p>Downloaded and unpacked the build, traced the failure to the connection setting, wrote the patch tool and tested the result in a browser.</p></div>
+    </div>
+  </section>
+
   <h2>How to play</h2>
   <div class="how">
     <ol>
@@ -107,90 +169,118 @@
     <p class="muted" style="margin:6px 0 0">Controls as described in my 2022 report. Two-player play of the recovered build has not been re-tested yet.</p>
   </div>
 
-  <h2>The game, from my 2022 report</h2>
-  <p class="design">Each player is an armoured 3D character with their own camera. A match lasts 180 seconds. Players fight each other and yellow glowing enemies, which spawn every 3–10 seconds and fire purple bullets. The weapon is a blade you can swing, throw into a wall or the floor, warp to, or use as one end of a laser. Defeating an opponent scores +20, an enemy +5, and being defeated costs 10; a ranking board closes the match.</p>
-  <div class="shots">
-    <figure><img src="img/report/start_menu.jpg" alt="Warping Playground start menu" loading="lazy"><figcaption>Start menu (report Fig. 5-1).</figcaption></figure>
-    <figure><img src="img/report/characters.jpg" alt="Two players' armoured 3D characters in the arena" loading="lazy"><figcaption>Two players' 3D characters; HP and MP bars top left, timer, scoreboard (Fig. 5-7).</figcaption></figure>
-    <figure><img src="img/report/enemies.jpg" alt="Yellow glowing enemies in the arena" loading="lazy"><figcaption>Yellow glowing enemies spawn around the arena (Fig. 5-8).</figcaption></figure>
-    <figure><img src="img/report/melee.jpg" alt="Melee attack" loading="lazy"><figcaption>Melee attack, left click (Fig. 5-13).</figcaption></figure>
-    <figure><img src="img/report/throw.jpg" alt="Throwing the blade" loading="lazy"><figcaption>Throwing attack, right click; right click again calls the blade back (Fig. 5-14).</figcaption></figure>
-    <figure><img src="img/report/laser.jpg" alt="Laser between the character and the stuck blade" loading="lazy"><figcaption>Laser between the character and the stuck blade, <kbd>B</kbd> (Fig. 5-17).</figcaption></figure>
-    <figure class="wide"><img src="img/report/warp_sequence.jpg" alt="Three frames: the character warps to the thrown blade" loading="lazy"><figcaption>Warping to the blade stuck in a wall, <kbd>V</kbd> (Fig. 5-16).</figcaption></figure>
-    <figure><img src="img/report/ranking.jpg" alt="Ranking board after the match" loading="lazy"><figcaption>Ranking board when the timer reaches zero (Fig. 5-11).</figcaption></figure>
+  <div class="detail-head">
+    <h2>The details</h2>
+    <button class="toggle" type="button" aria-pressed="false">Open all</button>
   </div>
+  <details class="more">
+    <summary>The game, from my 2022 report<span class="gist">What the game is and how it plays, with 8 screenshots from my report.</span></summary>
+    <div class="in">
+      <p class="design">Each player is an armoured 3D character with their own camera. A match lasts 180 seconds. Players fight each other and yellow glowing enemies, which spawn every 3–10 seconds and fire purple bullets. The weapon is a blade you can swing, throw into a wall or the floor, warp to, or use as one end of a laser. Defeating an opponent scores +20, an enemy +5, and being defeated costs 10; a ranking board closes the match.</p>
+      <div class="shots">
+        <figure><img src="img/report/start_menu.jpg" alt="Warping Playground start menu" loading="lazy"><figcaption>Start menu (report Fig. 5-1).</figcaption></figure>
+        <figure><img src="img/report/characters.jpg" alt="Two players' armoured 3D characters in the arena" loading="lazy"><figcaption>Two players' 3D characters; HP and MP bars top left, timer, scoreboard (Fig. 5-7).</figcaption></figure>
+        <figure><img src="img/report/enemies.jpg" alt="Yellow glowing enemies in the arena" loading="lazy"><figcaption>Yellow glowing enemies spawn around the arena (Fig. 5-8).</figcaption></figure>
+        <figure><img src="img/report/melee.jpg" alt="Melee attack" loading="lazy"><figcaption>Melee attack, left click (Fig. 5-13).</figcaption></figure>
+        <figure><img src="img/report/throw.jpg" alt="Throwing the blade" loading="lazy"><figcaption>Throwing attack, right click; right click again calls the blade back (Fig. 5-14).</figcaption></figure>
+        <figure><img src="img/report/laser.jpg" alt="Laser between the character and the stuck blade" loading="lazy"><figcaption>Laser between the character and the stuck blade, <kbd>B</kbd> (Fig. 5-17).</figcaption></figure>
+        <figure class="wide"><img src="img/report/warp_sequence.jpg" alt="Three frames: the character warps to the thrown blade" loading="lazy"><figcaption>Warping to the blade stuck in a wall, <kbd>V</kbd> (Fig. 5-16).</figcaption></figure>
+        <figure><img src="img/report/ranking.jpg" alt="Ranking board after the match" loading="lazy"><figcaption>Ranking board when the timer reaches zero (Fig. 5-11).</figcaption></figure>
+      </div>
+    </div>
+  </details>
 
-  <h2>How the final build was recovered</h2>
-  <div class="shots">
-    <figure><img src="img/final/menu.jpg" alt="Recovered build: start menu" loading="lazy"><figcaption>Recovered build: the start menu, connected over <code>wss://</code> (30 Oct 2026).</figcaption></figure>
-    <figure><img src="img/final/enemies.jpg" alt="Recovered build: a match with enemies" loading="lazy"><figcaption>A match in the recovered build: enemies, HP and MP bars, timer, scoreboard.</figcaption></figure>
+  <details class="more">
+    <summary>How the final build was recovered<span class="gist">The download, a first try that failed, the one-byte fix, the checks, and who did what.</span></summary>
+    <div class="in">
+      <div class="shots">
+        <figure><img src="img/final/menu.jpg" alt="Recovered build: start menu" loading="lazy"><figcaption>Recovered build: the start menu, connected over <code>wss://</code> (30 Oct 2026).</figcaption></figure>
+        <figure><img src="img/final/enemies.jpg" alt="Recovered build: a match with enemies" loading="lazy"><figcaption>A match in the recovered build: enemies, HP and MP bars, timer, scoreboard.</figcaption></figure>
+      </div>
+      <div class="cols" style="margin-top:14px">
+        <div class="box">
+          <h3>What was wrong, and the fix</h3>
+          <ul>
+            <li>In August 2022 I published the build on Unity Play (the link is in my report). It does not play there today (tried October 2026), and the project's source was not recovered.</li>
+            <li>Claude Code downloaded my build files (31 MB, built 15 Aug 2022) and ran them locally: they worked over plain http.</li>
+            <li>Likely cause: the build is set to connect to Photon over plain <code>ws://</code>, the setting my report gives for localhost; browsers block <code>ws://</code> on https pages such as Unity Play. My report says to switch the protocol before publishing there.</li>
+            <li>Redirecting the connection to <code>wss://</code> in the page failed: the name server could not parse the game's request and disconnected it, most likely because the game still encrypted it as it would on plain ws.</li>
+            <li>Fix: one byte in the build's Photon settings, protocol 4 (WebSocket) → 5 (WebSocketSecure), which gives the same secure connection as my report's publishing setting. Every other object is unchanged; the asset bundle was re-compressed. No source code was needed.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Checks</h3>
+          <ul>
+            <li>The game now connects to Photon's servers over <code>wss://</code>.</li>
+            <li>Single-player test in a browser: menu, room, start, and about 35 seconds of a match, with enemies spawning, the HP bar dropping and the timer counting down. Two-player play not yet re-tested.</li>
+            <li>The original download and an unpatched copy are kept with SHA-256 hashes; the patch tool is <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/main/tools/recover_final_build">on GitHub</a>.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Who did what</h3>
+          <ul>
+            <li><b>Me:</b> built the game in 2022; found that the Unity Play copy does not play; asked for the build to be recovered; chose to show the final game.</li>
+            <li><b>Claude Code:</b> downloaded and unpacked the build, traced the failure to the connection protocol, wrote the patch tool and tested the result in a browser.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px">The source code I kept is an earlier prototype of the game. Claude Code also restored it and upgraded it to Unity 6.3 LTS; the changes are on GitHub: <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/compare/v2022-original...ai-upgrade-2026-10">compare the original with the upgrade</a>.</p>
+    </div>
+  </details>
+
+  <h2>My other projects</h2>
+  <div class="cards">
+    <a class="also" href="story-factory/">
+      <img src="story-factory/img/hero.jpg" alt="A frame from a finished story video made by the pipeline: game characters with a Chinese narration row" loading="lazy">
+      <div>
+        <span class="tag restored">1 · AI agent pipeline · 2026</span>
+        <h3>AI video pipeline: one real run, stage by stage</h3>
+        <p>AI agents read the captions and stills of a four-hour game recording and write and check a Mandarin story script; scripts voice, build and test the video. It stops for my answers, and nothing goes public without me.</p>
+        <span class="btn">See the run →</span>
+      </div>
+    </a>
+    <a class="also" href="live-automation/">
+      <img src="live-automation/img/youtube_live.jpg" alt="A live stream on YouTube: the game with the AI co-host avatar, and the co-host's line in the live chat" loading="lazy">
+      <div>
+        <span class="tag after">2 · automation and AI · 2026</span>
+        <h3>Live streaming with an AI co-host: one session, start to live</h3>
+        <p>Two PCs, one START each. No stream title, tags or thumbnail is written until I press Apply on a review card, and an AI co-host comments in chat within set limits.</p>
+        <span class="btn">See the session →</span>
+      </div>
+    </a>
+    <a class="also" href="2d/">
+      <img src="2d/img/level4_boss.jpg" alt="The 2D game's level 4: the ninja, the boss and the slot machine" loading="lazy">
+      <div>
+        <span class="tag report">2021 · report screenshots</span>
+        <h3>2D action platformer (group of four)</h3>
+        <p>As the team's Designer I built the movement and double-jump physics, the slot machine and the audio. Not playable: the page shows screenshots from the group's 2021 report.</p>
+        <span class="btn">See the 2D game →</span>
+      </div>
+    </a>
   </div>
-  <div class="cols" style="margin-top:14px">
-    <div class="box">
-      <h3>What was wrong, and the fix</h3>
-      <ul>
-        <li>In August 2022 I published the build on Unity Play (the link is in my report). It does not play there today (tried October 2026), and the project's source was not recovered.</li>
-        <li>Claude Code downloaded my build files (31 MB, built 15 Aug 2022) and ran them locally: they worked over plain http.</li>
-        <li>Likely cause: the build is set to connect to Photon over plain <code>ws://</code>, the setting my report gives for localhost; browsers block <code>ws://</code> on https pages such as Unity Play. My report says to switch the protocol before publishing there.</li>
-        <li>Redirecting the connection to <code>wss://</code> in the page failed: the name server could not parse the game's request and disconnected it, most likely because the game still encrypted it as it would on plain ws.</li>
-        <li>Fix: one byte in the build's Photon settings, protocol 4 (WebSocket) → 5 (WebSocketSecure), which gives the same secure connection as my report's publishing setting. Every other object is unchanged; the asset bundle was re-compressed. No source code was needed.</li>
-      </ul>
-    </div>
-    <div class="box">
-      <h3>Checks</h3>
-      <ul>
-        <li>The game now connects to Photon's servers over <code>wss://</code>.</li>
-        <li>Single-player test in a browser: menu, room, start, and about 35 seconds of a match, with enemies spawning, the HP bar dropping and the timer counting down. Two-player play not yet re-tested.</li>
-        <li>The original download and an unpatched copy are kept with SHA-256 hashes; the patch tool is <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/tree/main/tools/recover_final_build">on GitHub</a>.</li>
-      </ul>
-    </div>
-    <div class="box">
-      <h3>Who did what</h3>
-      <ul>
-        <li><b>Me:</b> built the game in 2022; found that the Unity Play copy does not play; asked for the build to be recovered; chose to show the final game.</li>
-        <li><b>Claude Code:</b> downloaded and unpacked the build, traced the failure to the connection protocol, wrote the patch tool and tested the result in a browser.</li>
-      </ul>
-    </div>
-  </div>
-  <p class="muted" style="margin-top:10px">The source code I kept is an earlier prototype of the game. Claude Code also restored it and upgraded it to Unity 6.3 LTS; the changes are on GitHub: <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP/compare/v2022-original...ai-upgrade-2026-10">compare the original with the upgrade</a>.</p>
-
-  <h2>Also from my degree</h2>
-  <a class="also" href="2d/">
-    <img src="2d/img/level4_boss.jpg" alt="The 2D game's level 4: the ninja, the boss and the slot machine" loading="lazy">
-    <div>
-      <span class="tag report">2021 · report screenshots</span>
-      <h3>2D action platformer · UECS3173 Programming with Game Engine (group of four)</h3>
-      <p>"Coca Cola": a female ninja fights through four levels of moving platforms to a boss that teleports, with a slot machine that heals, buffs or swaps the weapon. As Designer I built the movement and double-jump physics, the slot machine and the audio.</p>
-      <p class="muted">Not playable: the project files are not available, so the page shows screenshots from the group's 2021 report.</p>
-      <span class="btn">See the 2D game →</span>
-    </div>
-  </a>
-
-  <h2>Also: AI agent work</h2>
-  <a class="also" href="story-factory/">
-    <img src="story-factory/img/hero.jpg" alt="A frame from a finished story video made by the pipeline: game characters with a Chinese narration row" loading="lazy">
-    <div>
-      <span class="tag restored">2026 · case file</span>
-      <h3>Story factory: one video's run, stage by stage</h3>
-      <p>My pipeline, built with Claude Code, turns a recording of a game's story scenes into a Mandarin story explainer of about half an hour. My story video with the most watch time so far (745 hours, 9,308 views) was made with an earlier, more hand-run version of it. The case file follows one October 2026 run: Claude agents read the captions and 1,764 stills of a four-hour recording, I answer their question sheet, and the script is linted and evidence-checked before it is voiced, built and QC'd.</p>
-      <p class="muted">The YouTube channel stays anonymous on the page.</p>
-      <span class="btn">See the case file →</span>
-    </div>
-  </a>
-  <a class="also" href="live-automation/">
-    <img src="live-automation/img/youtube_live.jpg" alt="A live stream on YouTube: the game with the AI co-host avatar, and the co-host's line in the live chat" loading="lazy">
-    <div>
-      <span class="tag after">2026 · one session</span>
-      <h3>Live streaming with an AI co-host: one session, start to live</h3>
-      <p>Two PCs, one START each: the game on one, OBS, the automation and an AI co-host on a laptop. No stream title, tags or thumbnail is written until I press Apply on a review card, and the titles, tags and categories are read back after they are written. The page follows one real session in late October 2026, with the measured timings, the co-host's safety limits, and a table of what broke and why.</p>
-      <p class="muted">The YouTube channel stays anonymous on the page.</p>
-      <span class="btn">See the session →</span>
-    </div>
-  </a>
 
   <footer>
     Tan Carlson · <a href="https://github.com/cocacolatancarlson-creator/unityPhotonOnlineMultiplayerGame_FYP">Source on GitHub</a> · Built with Unity and Photon PUN 2 · October 2026
   </footer>
 </div>
+<script>
+  // Open all / close all, and open a folded section when a link points at it.
+  (function () {
+    var btn = document.querySelector('.toggle');
+    var all = document.querySelectorAll('details.more');
+    if (btn) btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-pressed') !== 'true';
+      all.forEach(function (d) { d.open = open; });
+      btn.setAttribute('aria-pressed', String(open));
+      btn.textContent = open ? 'Close all' : 'Open all';
+    });
+    function openTarget() {
+      var t = location.hash && document.getElementById(location.hash.slice(1));
+      if (t && t.tagName === 'DETAILS') t.open = true;
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>
 </body>
 </html>

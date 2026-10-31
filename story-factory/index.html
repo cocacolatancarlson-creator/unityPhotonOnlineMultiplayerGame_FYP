@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Story Factory Case File — Tan Carlson</title>
+<title>AI Video Pipeline (Story Factory) — Tan Carlson</title>
 <meta name="description" content="My story factory, an AI agent pipeline built with Claude Code, and one real run through its main stages: Claude agents read the captions and stills of a four-hour game recording, I answer their question sheet, and the script is linted and evidence-checked before it is voiced, built and QC'd.">
 <style>
   :root {
@@ -16,8 +16,6 @@
   body { font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Arial, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif; }
   a { color: var(--accent); }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
-  .back { display: inline-block; margin-top: 18px; font-size: 15px; text-decoration: none; }
-  .back:hover { text-decoration: underline; }
   header { padding: 18px 0 18px; border-bottom: 1px solid var(--line); }
   header .who { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
   h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0 0 10px; }
@@ -40,17 +38,13 @@
   .best dd, .facts dd { margin: 2px 0 0; }
   .big { font-size: 22px; font-weight: 600; }
 
-  .hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; margin: 14px 0 0; align-items: start; }
-  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
-  .facts { display: grid; gap: 10px; margin: 0; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 10px; margin: 0; }
   .facts div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
 
   figure { margin: 0; }
   figure img { width: 100%; height: auto; display: block; border-radius: 8px; border: 1px solid var(--line); background: #222; }
   figcaption { color: var(--muted); font-size: 13px; margin-top: 5px; }
 
-  .stage { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 14px; }
-  .stage > h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .num { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--panel2);
          border: 1px solid var(--line); font-size: 14px; font-weight: 700; }
   .tag { display: inline-block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px;
@@ -58,7 +52,7 @@
   .tag.agent { color: #d2a8ff; background: #2a1a3d; }
   .tag.human { color: #f2cc60; background: var(--warnbg); }
   .tag.script { color: #9ecbff; background: #132339; }
-  .stage .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; margin-top: 4px; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; margin-top: 4px; }
 
   .art { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin: 10px 0 12px; }
   .art .file { color: var(--muted); font-size: 12px; font-family: Consolas, "Cascadia Mono", monospace; margin: 0 0 6px; overflow-wrap: anywhere; }
@@ -80,231 +74,358 @@
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; }
   .box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
 
+  /* Short version, 2026-10-31: project nav, an "At a glance" block on top, the detail folded below it. */
+  .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 14px 0 0; font-size: 14px; }
+  .nav span { color: var(--muted); }
+  .nav a { text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .nav a[aria-current="page"] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--accent); }
+  .glance { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 16px 18px; margin: 22px 0 0; }
+  .glance > h2 { font-size: 20px; margin: 0 0 6px; }
+  .oneline { font-size: 18px; margin: 0 0 14px; }
+  .hl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 10px; margin: 0 0 14px; }
+  .hl > div { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .hl b { display: block; font-size: 22px; line-height: 1.25; color: var(--accent); }
+  .hl .gate { border-color: var(--warn); }
+  .hl .gate b { color: #f2cc60; }
+  .hl p { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+  .glance .chip { white-space: normal; }
+  .pics2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; align-items: start; }
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; margin: 14px 0 0; }
+  .pics2 .roles { margin: 0; }
+  .roles > div { border-top: 3px solid var(--line); padding-top: 8px; font-size: 15px; }
+  .roles .me { border-color: var(--warn); }
+  .roles .ai { border-color: #8957e5; }
+  .roles h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin: 0 0 4px; }
+  .roles p { margin: 0; }
+  .detail-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin: 40px 0 10px; }
+  .detail-head h2 { margin: 0; }
+  .toggle { background: var(--panel2); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+  .toggle:hover { border-color: var(--accent); }
+  details.more { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 10px; }
+  details.more > summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 12px 16px; font-size: 18px; font-weight: 600; }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "\25B8"; display: inline-block; width: 14px; color: var(--accent); transition: transform .15s; }
+  details.more[open] > summary::before { transform: rotate(90deg); }
+  details.more > summary:hover { color: var(--accent); }
+  details.more > summary .gist { flex-basis: 100%; padding-left: 22px; font-size: 14px; font-weight: 400; color: var(--muted); }
+  details.more > .in { padding: 2px 18px 16px; }
+  details.more .box, details.more .best div, details.more .facts div { background: var(--bg); }
+  details.more th { background: var(--panel2); }
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 8px; font-size: 14px; }
+  .chip { border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; background: var(--bg); }
+  .chip.human { color: #f2cc60; background: var(--warnbg); border-color: var(--warn); font-weight: 600; }
+  .chip.agent { color: #d2a8ff; background: #2a1a3d; border-color: #5b3a85; }
+  .arr { color: var(--muted); }
+
   footer { margin: 44px 0 30px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../">← Game projects</a>
+  <nav class="nav" aria-label="Projects">
+    <span>Tan Carlson · projects:</span>
+    <a href="../story-factory/" aria-current="page">1 · AI video pipeline</a>
+    <a href="../live-automation/">2 · Live streaming with an AI co-host</a>
+    <a href="../">3 · Unity game (play it)</a>
+    <a href="../2d/">2D game, 2021</a>
+  </nav>
   <header>
     <p class="who">Tan Carlson · Software Engineer · AI agent pipeline</p>
-    <h1>Story factory: one video's run, stage by stage</h1>
-    <p class="lead">My story factory turns a recording of a game's story scenes (other players' public uploads, credited in the video's description) into a Mandarin story explainer of about half an hour for YouTube. Claude Code built it to my direction; I start each run and make the calls at its gates. This page follows one real run from October 2026 through its main stages, with the file each stage left behind, so you can see the process and the checks, not only the finished video.</p>
+    <h1>AI video pipeline: one real run, stage by stage</h1>
+    <p class="lead">My "story factory" turns a recording of a game's story scenes (other players' public uploads, credited in the video's description) into a Mandarin story explainer of about half an hour for YouTube. Claude Code built it to my direction. This page follows one real run from October 2026, with the file each stage left behind.</p>
   </header>
+
+  <section class="glance" aria-labelledby="glance-h">
+    <h2 id="glance-h">At a glance</h2>
+    <p class="oneline">Claude AI agents read the footage's captions and stills and write and check the script; scripts voice, build and test the video; the run stops for my calls before the writing starts and before anything is uploaded.</p>
+    <div class="hl">
+      <div><b>4 hours</b><p>of recording, read by 8 Claude Opus agents (one act each) as 3,259 caption lines and 1,764 still frames.</p></div>
+      <div><b>244 lines</b><p>of script checked against the footage by AI judges: 98 fixed automatically, 9 left for my review.</p></div>
+      <div class="gate"><b>2 stops + my yes</b><p>The run waits for my answers twice before the script is written, and for my yes before upload. I publish it myself.</p></div>
+      <div><b>745 hours</b><p>of watch time on my story video with the most so far, made with an earlier, more hand-run version (<a href="#best">details</a>).</p></div>
+    </div>
+    <div class="flow">
+      <span class="chip">1 Prepare the footage</span><span class="arr">→</span>
+      <span class="chip human">2 I answer the question sheet</span><span class="arr">→</span>
+      <span class="chip agent">3 Agents read the acts</span><span class="arr">→</span>
+      <span class="chip human">I settle 6 open points</span><span class="arr">→</span>
+      <span class="chip agent">4 Agent writes, lint checks</span><span class="arr">→</span>
+      <span class="chip agent">5 Quiz and evidence audit</span><span class="arr">→</span>
+      <span class="chip">6 Voice, build, QC</span><span class="arr">→</span>
+      <span class="chip human">7 My yes, then upload</span>
+    </div>
+    <p class="muted">Purple = Claude Opus agents, gold = me, grey = scripts.</p>
+    <div class="pics2">
+      <figure>
+        <img src="img/hero.jpg" alt="A frame of the finished video: three game characters, one aiming a pistol, a blurred figure on the right, and the Chinese narration row at the centre" width="1600" height="900">
+        <figcaption>The finished video at 16:00. The large Chinese row is the narration; it says that everyone wants the doctor to come clean.</figcaption>
+      </figure>
+      <div class="roles">
+        <div class="me"><h3>Me</h3><p>Picked the game, set the house rules the pipeline enforces, answered both stops, said yes to the upload and published the video.</p></div>
+        <div class="ai"><h3>Claude Code and its agents</h3><p>Built the pipeline to my direction (scripts, agent workflows, lint, audit and QC checks) and ran the stages of this video. On 30 Oct, 1,410 of 1,413 tests passed (the code as of that day, not the exact build of this video); the 2 failures are explained in the details.</p></div>
+      </div>
+    </div>
+  </section>
 
   <div class="notice"><b>The channel stays anonymous here.</b> There is no channel name, video link or title on this page. Character names are blurred in the stills or replaced by roles in quoted text, and no thumbnail that was ever on the videos is shown. The game itself can still be recognised from the stills. I can share the videos in an interview.</div>
 
-  <h2>Most watch time so far</h2>
-  <dl class="best">
-    <div><dt>Watch time</dt><dd><span class="big">745 hours</span> from 9,234 views · YouTube Analytics API</dd></div>
-    <div><dt>Views</dt><dd><span class="big">9,308</span> · YouTube Data API</dd></div>
-    <div><dt>Watched on average</dt><dd><span class="big">35%</span> · about 9 of its 25 minutes</dd></div>
-  </dl>
-  <p>A Mandarin story explainer of a different game, published in early October 2026, before the story factory below was specified (9 Oct). It was made with an earlier, more hand-run version. Claude Code agents researched the game; a writer agent drafted the script; three checker agents reviewed it for facts, house rules and fit with the footage; an agent wrote the render script; and two QA passes checked picture and audio. I picked the game, approved the script, asked for the video and its thumbnail to open on the female lead, and published it. That version had no act-by-act reading of the footage by agents, no question sheet, no shared script lint (only a one-off validator written for that script) and no evidence audit. So the case file below follows a newer run that went through all of the current stages.</p>
-  <p class="muted">Read 30 Oct 2026, from publishing to that day.</p>
-
-  <h2>The run on this page</h2>
-  <div class="hero">
-    <figure>
-      <img src="img/hero.jpg" alt="A frame of the finished video: three game characters, one aiming a pistol, a blurred figure on the right, and the Chinese narration row at the centre" width="1600" height="900">
-      <figcaption>The finished video at 16:00. The large Chinese row is the narration; it says that everyone wants the doctor to come clean.</figcaption>
-    </figure>
-    <dl class="facts">
-      <div><dt>The video</dt><dd>A Mandarin story explainer of about half an hour, about a game released in 2026. Published October 2026.</dd></div>
-      <div><dt>What the agents read</dt><dd>A 4:04:58 recording, as 3,259 caption lines and 1,764 still frames, in 226 scenes and 8 acts.</dd></div>
-      <div><dt>Views</dt><dd><span class="big">74</span> · YouTube Data API</dd></div>
-      <div><dt>Watch time</dt><dd><span class="big">5.0 hours</span> from 59 views; 17.8% of the video watched on average · YouTube Analytics API</dd></div>
-    </dl>
+  <div class="detail-head">
+    <h2>The details</h2>
+    <button class="toggle" type="button" aria-pressed="false">Open all</button>
   </div>
-  <p class="muted" style="margin-top:10px">All numbers read on 30 Oct 2026, from publishing to that day. Analytics runs a few days behind the public view counter, which is why the two view counts differ. This video is newer and much smaller than the one above; it is here because its run went through all of the current stages.</p>
+  <p class="muted">Each step opens with a click. Purple = Claude Opus agents, blue = scripts, gold = me. File paths are relative to the title's run folder.</p>
 
-  <h2>The run, stage by stage</h2>
-  <p class="muted">Purple = Claude Opus agents, blue = scripts, gold = me. File paths are relative to the title's run folder.</p>
-
-  <section class="stage">
-    <h3><span class="num">1</span> Prepare the footage <span class="tag script">scripts</span></h3>
-    <p>Scripts prepare the recording first. They take YouTube's automatic captions of the recording as the dialogue track (3,259 lines), split it into 226 scenes across 8 acts, and sample 1,764 still frames, each named by scene, time and dialogue line. Captions mishear words and carry no speaker names, and the agents never hear the audio or see motion, so the frames carry the proof: the game's own subtitles and name tags are visible in them. The scripts also crop candidate faces for a character list.</p>
-    <figure>
-      <img src="img/watch_frames.jpg" alt="Four sampled frames from one opening scene: the hero walking through a mall corridor, then a bearded doctor talking to him" width="1536" height="932" loading="lazy">
-      <figcaption>Four of the sampled frames, all from scene T00122 in act 1. File name = scene, source time in seconds, dialogue line; <code>_est</code> is the scene's establishing shot. Name tags, and a quest line that names a character, are pixelated.</figcaption>
-    </figure>
-  </section>
-
-  <section class="stage">
-    <h3><span class="num">2</span> Gate G0: the question sheet <span class="tag agent">agents</span><span class="tag human">me</span></h3>
-    <p>Before any agent reads the acts, Opus agents turn the captions and face crops into a character list and a question sheet, and the run stops until I reply. The sheet asks me to confirm names and spellings, then six questions: whose story it is, what a stranger must understand by the end, which reveal is the climax, how much to spoil, how many characters to name, and which narration style fits. Each question comes with a suggested answer and the dialogue lines behind it.</p>
-    <div class="two">
-      <div class="art">
-        <p class="file">understand/bank/G0_sheet.md · item A4 (names replaced by roles)</p>
-        <p class="en">"unknown_1: the voice that tempts [the hero] in [the planet's core] over pencil sketches (L3048–L3073, 3:46:17) is not named. My guess is [the villain]'s mind inside [the hero], or [the hero]'s own other self. Whose voice is it?"</p>
-        <p class="file">understand/bank/g0_owner_reply_2026-10-23.md · my reply, verbatim except the names</p>
-        <p class="zh">"ok to all. A3: use the Steam zh names [the four official Chinese names]; the rest stay provisional. A4: I don't know whose voice it is; call it <span lang="zh-Hans">一个声音</span> and don't guess."</p>
-      </div>
+  <details class="more">
+    <summary><span class="num">1</span> Prepare the footage <span class="tag script">scripts</span><span class="gist">Scripts take the recording's 3,259 auto-caption lines, split them into 226 scenes and sample 1,764 still frames.</span></summary>
+    <div class="in">
+      <p>Scripts prepare the recording first. They take YouTube's automatic captions of the recording as the dialogue track (3,259 lines), split it into 226 scenes across 8 acts, and sample 1,764 still frames, each named by scene, time and dialogue line. Captions mishear words and carry no speaker names, and the agents never hear the audio or see motion, so the frames carry the proof: the game's own subtitles and name tags are visible in them. The scripts also crop candidate faces for a character list.</p>
       <figure>
-        <img src="img/g0_voice.jpg" alt="A pencil-sketch scene from the finished video with the Chinese caption 一个声音：毕竟" width="1280" height="720" loading="lazy">
-        <figcaption>The finished video at 28:00: the voice's lines are labelled <span lang="zh-Hans">一个声音</span> ("a voice"), as I asked, and no one is guessed.</figcaption>
+        <img src="img/watch_frames.jpg" alt="Four sampled frames from one opening scene: the hero walking through a mall corridor, then a bearded doctor talking to him" width="1536" height="932" loading="lazy">
+        <figcaption>Four of the sampled frames, all from scene T00122 in act 1. File name = scene, source time in seconds, dialogue line; <code>_est</code> is the scene's establishing shot. Name tags, and a quest line that names a character, are pixelated.</figcaption>
       </figure>
     </div>
-  </section>
+  </details>
 
-  <section class="stage">
-    <h3><span class="num">3</span> Read the acts <span class="tag agent">agents</span></h3>
-    <p>After my reply, eight Claude Opus readers go through the acts in order, one act each, and build a story bible: who speaks each line, what happens, what causes what, and what is still unclear, with every claim tied to a line id or a frame. The readers are told not to open recaps or wikis, so the reading has to come from the game itself. A final pass writes a ten-sentence story, the cast and the story beats.</p>
-    <div class="art">
-      <p class="file">understand/story_10.md · sentence 2 of 10 (names replaced by roles)</p>
-      <p class="zh" lang="zh-Hans">〔主角〕误吃了〔博士〕收藏的不死鸟之蛋，得到吃掉对手核心就能夺走其能力的本事，博士便请他去地下迷宫吃掉〔反派〕，夺回人类的集体智慧，也许还能让冰冻的女孩复活。[L0199-L0205, L0221-L0223, L0230-L0234, L0270-L0272, L0280-L0282]</p>
-      <p class="en">[The hero] accidentally eats the phoenix egg [the doctor] kept, and gains the power to take an opponent's abilities by eating its core. The doctor asks him to go into the underground labyrinth, eat [the villain], take back humanity's collective intelligence, and perhaps bring the frozen girl back to life. The bracket lists the dialogue lines that support the sentence.</p>
+  <details class="more">
+    <summary><span class="num">2</span> Gate G0: the question sheet <span class="tag agent">agents</span><span class="tag human">me</span><span class="gist">Agents draft a character list and six questions; the run waits for my answers.</span></summary>
+    <div class="in">
+      <p>Before any agent reads the acts, Opus agents turn the captions and face crops into a character list and a question sheet, and the run stops until I reply. The sheet asks me to confirm names and spellings, then six questions: whose story it is, what a stranger must understand by the end, which reveal is the climax, how much to spoil, how many characters to name, and which narration style fits. Each question comes with a suggested answer and the dialogue lines behind it.</p>
+      <div class="two">
+        <div class="art">
+          <p class="file">understand/bank/G0_sheet.md · item A4 (names replaced by roles)</p>
+          <p class="en">"unknown_1: the voice that tempts [the hero] in [the planet's core] over pencil sketches (L3048–L3073, 3:46:17) is not named. My guess is [the villain]'s mind inside [the hero], or [the hero]'s own other self. Whose voice is it?"</p>
+          <p class="file">understand/bank/g0_owner_reply_2026-10-23.md · my reply, verbatim except the names</p>
+          <p class="zh">"ok to all. A3: use the Steam zh names [the four official Chinese names]; the rest stay provisional. A4: I don't know whose voice it is; call it <span lang="zh-Hans">一个声音</span> and don't guess."</p>
+        </div>
+        <figure>
+          <img src="img/g0_voice.jpg" alt="A pencil-sketch scene from the finished video with the Chinese caption 一个声音：毕竟" width="1280" height="720" loading="lazy">
+          <figcaption>The finished video at 28:00: the voice's lines are labelled <span lang="zh-Hans">一个声音</span> ("a voice"), as I asked, and no one is guessed.</figcaption>
+        </figure>
+      </div>
     </div>
-    <p>Then comes a second stop: six points the agents could not settle. For each one, Claude Code pulled the frames or captions and suggested an answer, and I picked an answer for all six before the writing began.</p>
-  </section>
+  </details>
 
-  <section class="stage">
-    <h3><span class="num">4</span> Write and lint <span class="tag agent">agent</span><span class="tag script">script</span></h3>
-    <p>One Opus writer drafts the whole script from the ten-sentence story, the cast and the beats: 240 narration lines, about 8,600 Chinese characters, and 4 holds where the game plays on its own. <code>lint_script.py</code> then runs 30 checks, for example: reported-speech verbs, how each name is introduced, AI-sounding phrasing, narrator questions that never get answered, story order, and evidence beats. A style pass then rewrote 10 lines and 2 hold captions, and the lint ran again.</p>
-    <p>The writer's draft passed the lint on the first try (0 FAIL, 0 WARN, 2 INFO notes). The FAIL below comes from the next stage, because every fix the audit proposes goes back through the same lint.</p>
-    <div class="art">
-      <p class="file">audit/…/discarded/…lint.md · line A5_09, as a verifier agent rewrote it</p>
-      <p><span class="label red">FAIL</span> <span class="zh" lang="zh-Hans">博士接着说他弄到了不死鸟的蛋，〔主角〕愣住了，原来蛋有两颗。</span></p>
-      <p class="en">"The doctor goes on to say he got the phoenix's egg; [the hero] freezes: there were two eggs."</p>
-      <p><span class="label">Rule</span> <code>evidence_relay</code>, as the lint prints it: "FAIL on a clue line with a speech-report verb or a colon (wording fix: say what the game shows, then read it)". A clue line has to point at what is on screen, not retell what someone said.</p>
-      <p><span class="label">Cost</span> At the time, fixes were applied all or nothing, so this one line held back the whole batch of 104 changes. (Since 29 Oct, the audit re-applies the batch once without the failing line.)</p>
-      <p><span class="label grn">Fixed</span> <span class="zh" lang="zh-Hans">字幕上紧接着一句，博士弄到了不死鸟的蛋，〔主角〕愣住了，原来蛋有两颗。</span></p>
-      <p class="en">"The very next subtitle: the doctor got the phoenix's egg; [the hero] freezes: there were two eggs." Claude Code reworded the line, the lint passed, and the batch was applied again.</p>
+  <details class="more">
+    <summary><span class="num">3</span> Read the acts <span class="tag agent">agents</span><span class="gist">Eight Opus agents read one act each and build a story bible tied to line ids and frames.</span></summary>
+    <div class="in">
+      <p>After my reply, eight Claude Opus readers go through the acts in order, one act each, and build a story bible: who speaks each line, what happens, what causes what, and what is still unclear, with every claim tied to a line id or a frame. The readers are told not to open recaps or wikis, so the reading has to come from the game itself. A final pass writes a ten-sentence story, the cast and the story beats.</p>
+      <div class="art">
+        <p class="file">understand/story_10.md · sentence 2 of 10 (names replaced by roles)</p>
+        <p class="zh" lang="zh-Hans">〔主角〕误吃了〔博士〕收藏的不死鸟之蛋，得到吃掉对手核心就能夺走其能力的本事，博士便请他去地下迷宫吃掉〔反派〕，夺回人类的集体智慧，也许还能让冰冻的女孩复活。[L0199-L0205, L0221-L0223, L0230-L0234, L0270-L0272, L0280-L0282]</p>
+        <p class="en">[The hero] accidentally eats the phoenix egg [the doctor] kept, and gains the power to take an opponent's abilities by eating its core. The doctor asks him to go into the underground labyrinth, eat [the villain], take back humanity's collective intelligence, and perhaps bring the frozen girl back to life. The bracket lists the dialogue lines that support the sentence.</p>
+      </div>
+      <p>Then comes a second stop: six points the agents could not settle. For each one, Claude Code pulled the frames or captions and suggested an answer, and I picked an answer for all six before the writing began.</p>
     </div>
-  </section>
+  </details>
 
-  <section class="stage">
-    <h3><span class="num">5</span> Quiz and evidence audit <span class="tag agent">agents</span></h3>
-    <p><b>Quiz.</b> One Opus agent writes 40 questions and an answer key from the raw dialogue and frames only. A second agent answers them from the story bible alone, and a grader compares the two. The result was 38 matches, 2 partial and 0 mismatches. In both partials the bible was right and the key was wrong. In one, the key had read "hand" from the auto-captions where the burned-in subtitle says "head".</p>
-    <figure style="margin:10px 0 14px">
-      <img src="img/quiz_speaker.jpg" alt="Two consecutive frames in a cinema; the dialogue box name tags are blurred, the left tag is red and the right one is pink and blue" width="1548" height="432" loading="lazy">
-      <figcaption>Quiz question 17, source footage at 1:53:49 and 1:53:54. The key gave both lines to the female lead, but the right frame's name tag belongs to the hero. The tags are blurred here, but you can still see that their colours differ.</figcaption>
-    </figure>
-    <p><b>Evidence audit.</b> Opus judges check every script line against the dialogue and frames, and Opus verifiers try to overturn each flag and write the smallest fix. A script applies the fixes, the lint re-runs, and a fresh judge re-checks the changed lines. Of 244 lines, 122 were flagged. The verifiers confirmed 107 flags and overturned 15. 98 were fixed automatically, and 9 were left for me: 0 must-fix, 3 should-fix and 6 notes.</p>
-    <div class="art">
-      <p class="file">audit/…/AUDIT.md · item 5, line A3_09 (names replaced by roles)</p>
-      <p><span class="label">Claim</span> <span class="zh" lang="zh-Hans">对话框里列着一份名单，〔反派〕手下有四位封了称号的将军。</span> <span class="en">("The dialogue box lists a roster: [the villain] has four generals with titles.")</span></p>
-      <p><span class="label">Evidence</span> <span class="en">Line L1151 at 1:28:59: "Among them are four powerful monsters who have been granted titles." The frame at L1150 shows a corkboard pyramid of monster pictures, not a listed roster.</span></p>
-      <p><span class="label">Verdict</span> <span class="en">Overstated (visual), judge confidence low. The audit did not change the line; it listed it for me as a visual doubt.</span></p>
-      <p><span class="label grn">Fixed</span> <span class="zh" lang="zh-Hans">画面上是一块钉满怪兽照片的软木板，〔反派〕手下有四位封了称号的将军。</span> <span class="en">("On screen is a corkboard covered in monster photos; [the villain] has four generals with titles.") Before my review, Claude Code checked the frames at one per second and narrowed the wording, and the review package told me.</span></p>
+  <details class="more">
+    <summary><span class="num">4</span> Write and lint <span class="tag agent">agent</span><span class="tag script">script</span><span class="gist">One writer agent drafts 240 lines; a 30-check lint and a style pass follow.</span></summary>
+    <div class="in">
+      <p>One Opus writer drafts the whole script from the ten-sentence story, the cast and the beats: 240 narration lines, about 8,600 Chinese characters, and 4 holds where the game plays on its own. <code>lint_script.py</code> then runs 30 checks, for example: reported-speech verbs, how each name is introduced, AI-sounding phrasing, narrator questions that never get answered, story order, and evidence beats. A style pass then rewrote 10 lines and 2 hold captions, and the lint ran again.</p>
+      <p>The writer's draft passed the lint on the first try (0 FAIL, 0 WARN, 2 INFO notes). The FAIL below comes from the next stage, because every fix the audit proposes goes back through the same lint.</p>
+      <div class="art">
+        <p class="file">audit/…/discarded/…lint.md · line A5_09, as a verifier agent rewrote it</p>
+        <p><span class="label red">FAIL</span> <span class="zh" lang="zh-Hans">博士接着说他弄到了不死鸟的蛋，〔主角〕愣住了，原来蛋有两颗。</span></p>
+        <p class="en">"The doctor goes on to say he got the phoenix's egg; [the hero] freezes: there were two eggs."</p>
+        <p><span class="label">Rule</span> <code>evidence_relay</code>, as the lint prints it: "FAIL on a clue line with a speech-report verb or a colon (wording fix: say what the game shows, then read it)". A clue line has to point at what is on screen, not retell what someone said.</p>
+        <p><span class="label">Cost</span> At the time, fixes were applied all or nothing, so this one line held back the whole batch of 104 changes. (Since 29 Oct, the audit re-applies the batch once without the failing line.)</p>
+        <p><span class="label grn">Fixed</span> <span class="zh" lang="zh-Hans">字幕上紧接着一句，博士弄到了不死鸟的蛋，〔主角〕愣住了，原来蛋有两颗。</span></p>
+        <p class="en">"The very next subtitle: the doctor got the phoenix's egg; [the hero] freezes: there were two eggs." Claude Code reworded the line, the lint passed, and the batch was applied again.</p>
+      </div>
     </div>
-  </section>
+  </details>
 
-  <section class="stage">
-    <h3><span class="num">6</span> Voice, build, QC, thumbnails <span class="tag script">scripts</span></h3>
-    <p><b>Voice:</b> edge-tts, an online Microsoft neural voice, reads 240 lines (about 29 minutes of speech) at 1.06× tempo. Speech recognition reads the voice track back; it raised 23 warnings, and a listen list went to me. <b>Build:</b> about 32 minutes at 2560×1440 and 30 fps; −16.1 LUFS, true peak −4.1 dBTP; narration starts on the first frame. <b>QC:</b> <code>qc_story.py</code> re-reads the finished file. Its ten checks are below, titled as the report prints them; the short notes after a colon are mine.</p>
-    <div class="table">
-      <table>
-        <thead><tr><th>Check</th><th>What it checks</th><th>Result</th></tr></thead>
-        <tbody>
-          <tr><td>a</td><td>Boxed-subtitle assertion</td><td class="pass">PASS</td></tr>
-          <tr><td>b</td><td>zh-row collision scan: 1,040 subtitle rows × 3 frames → 967 clear, 11 touching on-screen text</td><td class="fail">FAIL</td></tr>
-          <tr><td>c</td><td>Render-vs-source integrity diff</td><td class="pass">PASS</td></tr>
-          <tr><td>d</td><td>Spoiler-chip absence</td><td class="pass">PASS</td></tr>
-          <tr><td>e</td><td>Mix and timeline: loudness, music under the voice, first narration at 0.0 s</td><td class="pass">PASS</td></tr>
-          <tr><td>f</td><td>Picture plausibility: duration, 2560×1440, no frozen picture outside holds</td><td class="pass">PASS</td></tr>
-          <tr><td>g</td><td>Residual lists for the human</td><td class="info">INFO</td></tr>
-          <tr><td>h</td><td>Shot integrity vs source cuts: skipped, no cut list for this source</td><td class="info">INFO</td></tr>
-          <tr><td>i</td><td>Entities: mention → picture</td><td class="pass">PASS</td></tr>
-          <tr><td>j</td><td>Ledger / HUD / faces / density / legibility / holds: 46 label boxes overlap the HUD zone (43 of them the top band), and 3 subtitle rows lie over burned-in game text in zoomed stills</td><td class="fail">FAIL</td></tr>
-        </tbody>
-      </table>
+  <details class="more">
+    <summary><span class="num">5</span> Quiz and evidence audit <span class="tag agent">agents</span><span class="gist">A 40-question quiz (38 match, 0 mismatch) and a line-by-line evidence audit (98 fixes).</span></summary>
+    <div class="in">
+      <p><b>Quiz.</b> One Opus agent writes 40 questions and an answer key from the raw dialogue and frames only. A second agent answers them from the story bible alone, and a grader compares the two. The result was 38 matches, 2 partial and 0 mismatches. In both partials the bible was right and the key was wrong. In one, the key had read "hand" from the auto-captions where the burned-in subtitle says "head".</p>
+      <figure style="margin:10px 0 14px">
+        <img src="img/quiz_speaker.jpg" alt="Two consecutive frames in a cinema; the dialogue box name tags are blurred, the left tag is red and the right one is pink and blue" width="1548" height="432" loading="lazy">
+        <figcaption>Quiz question 17, source footage at 1:53:49 and 1:53:54. The key gave both lines to the female lead, but the right frame's name tag belongs to the hero. The tags are blurred here, but you can still see that their colours differ.</figcaption>
+      </figure>
+      <p><b>Evidence audit.</b> Opus judges check every script line against the dialogue and frames, and Opus verifiers try to overturn each flag and write the smallest fix. A script applies the fixes, the lint re-runs, and a fresh judge re-checks the changed lines. Of 244 lines, 122 were flagged. The verifiers confirmed 107 flags and overturned 15. 98 were fixed automatically, and 9 were left for me: 0 must-fix, 3 should-fix and 6 notes.</p>
+      <div class="art">
+        <p class="file">audit/…/AUDIT.md · item 5, line A3_09 (names replaced by roles)</p>
+        <p><span class="label">Claim</span> <span class="zh" lang="zh-Hans">对话框里列着一份名单，〔反派〕手下有四位封了称号的将军。</span> <span class="en">("The dialogue box lists a roster: [the villain] has four generals with titles.")</span></p>
+        <p><span class="label">Evidence</span> <span class="en">Line L1151 at 1:28:59: "Among them are four powerful monsters who have been granted titles." The frame at L1150 shows a corkboard pyramid of monster pictures, not a listed roster.</span></p>
+        <p><span class="label">Verdict</span> <span class="en">Overstated (visual), judge confidence low. The audit did not change the line; it listed it for me as a visual doubt.</span></p>
+        <p><span class="label grn">Fixed</span> <span class="zh" lang="zh-Hans">画面上是一块钉满怪兽照片的软木板，〔反派〕手下有四位封了称号的将军。</span> <span class="en">("On screen is a corkboard covered in monster photos; [the villain] has four generals with titles.") Before my review, Claude Code checked the frames at one per second and narrowed the wording, and the review package told me.</span></p>
+      </div>
     </div>
-    <p>Overall: FAIL. Before handing over, Claude Code checked the flagged frames by eye. None of check b's 11 rows covers game dialogue. Most of check j's label overlaps are with a HUD band copied from an OCR proposal; the top strips of all 35 zoomed stills show no HUD there, and narrowing the band would mean a full re-render. Check j's 3 rows over game text include the worst case, line A8_18, which covers the boss health bar that its own line mentions. All of it went to me as known issues.</p>
-    <p><b>Thumbnails:</b> <code>thumb_framed.py</code> composes them from game frames with a scripted text layout. Nothing in them is AI-generated. By upload day there was a sheet of 9 options to pick from; see stage 7.</p>
-  </section>
+  </details>
 
-  <section class="stage">
-    <h3><span class="num">7</span> Gate G1: publish <span class="tag script">API</span><span class="tag human">me</span></h3>
-    <ul>
-      <li>I got the review package: the video in six phone-size parts, the QC report, and a review note that offered a fix for A8_18 (re-voice and rebuild, about an hour). I replied "yes, upload - private, with thumbnail #4", so A8_18 stayed as it was.</li>
-      <li>My rule for publishing: if the YouTube API can do a step, Claude Code does it and reads the result back; if only YouTube Studio can, Claude Code gives me a short list and I do it by hand. The table below shows how that split for this video.</li>
-      <li>After publishing, I picked a new hook-first title, which was applied through the API. The next day I asked for more eye-catching thumbnails, then said the colours still felt low-energy. From the next round I picked a split design, asked for a different frame, and picked its hearts-frame variant. Each change was set through the API and read back.</li>
-    </ul>
-    <div class="table">
-      <table>
-        <thead><tr><th>Step</th><th>Who</th><th>How</th></tr></thead>
-        <tbody>
-          <tr><td>Upload the video as private, with thumbnail #4, the title, description, chapters and an English title, then read them back (the served thumbnail matched the file)</td><td>Claude Code</td><td>YouTube Data API</td></tr>
-          <tr><td>YouTube's copyright check, the game-title field, and checking the AI-content label (the API sets it at upload but does not return it)</td><td>Me</td><td>YouTube Studio; the API does not cover these</td></tr>
-          <tr><td>Make the video public, after the Studio steps</td><td>Me</td><td>YouTube Studio, the same day</td></tr>
-          <tr><td>The new title, then the new thumbnails, each read back</td><td>Claude Code, on my picks</td><td>YouTube Data API</td></tr>
-          <tr><td>33 Shorts of 37–44 seconds made from this video's script and footage (by 30 Oct): upload each, schedule it to go public about 20 minutes later, read it back, and check it is live</td><td>Claude Code, after my yes to each upload</td><td>YouTube Data API</td></tr>
-          <tr><td>Link each Short to this video (the related-video field)</td><td>Me</td><td>YouTube Studio; the API does not cover it</td></tr>
-        </tbody>
-      </table>
+  <details class="more">
+    <summary><span class="num">6</span> Voice, build, QC, thumbnails <span class="tag script">scripts</span><span class="gist">Neural voice, a 2560×1440 build, and 10 QC checks: 2 failed, were checked by eye and sent to me.</span></summary>
+    <div class="in">
+      <p><b>Voice:</b> edge-tts, an online Microsoft neural voice, reads 240 lines (about 29 minutes of speech) at 1.06× tempo. Speech recognition reads the voice track back; it raised 23 warnings, and a listen list went to me. <b>Build:</b> about 32 minutes at 2560×1440 and 30 fps; −16.1 LUFS, true peak −4.1 dBTP; narration starts on the first frame. <b>QC:</b> <code>qc_story.py</code> re-reads the finished file. Its ten checks are below, titled as the report prints them; the short notes after a colon are mine.</p>
+      <div class="table">
+        <table>
+          <thead><tr><th>Check</th><th>What it checks</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td>a</td><td>Boxed-subtitle assertion</td><td class="pass">PASS</td></tr>
+            <tr><td>b</td><td>zh-row collision scan: 1,040 subtitle rows × 3 frames → 967 clear, 11 touching on-screen text</td><td class="fail">FAIL</td></tr>
+            <tr><td>c</td><td>Render-vs-source integrity diff</td><td class="pass">PASS</td></tr>
+            <tr><td>d</td><td>Spoiler-chip absence</td><td class="pass">PASS</td></tr>
+            <tr><td>e</td><td>Mix and timeline: loudness, music under the voice, first narration at 0.0 s</td><td class="pass">PASS</td></tr>
+            <tr><td>f</td><td>Picture plausibility: duration, 2560×1440, no frozen picture outside holds</td><td class="pass">PASS</td></tr>
+            <tr><td>g</td><td>Residual lists for the human</td><td class="info">INFO</td></tr>
+            <tr><td>h</td><td>Shot integrity vs source cuts: skipped, no cut list for this source</td><td class="info">INFO</td></tr>
+            <tr><td>i</td><td>Entities: mention → picture</td><td class="pass">PASS</td></tr>
+            <tr><td>j</td><td>Ledger / HUD / faces / density / legibility / holds: 46 label boxes overlap the HUD zone (43 of them the top band), and 3 subtitle rows lie over burned-in game text in zoomed stills</td><td class="fail">FAIL</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Overall: FAIL. Before handing over, Claude Code checked the flagged frames by eye. None of check b's 11 rows covers game dialogue. Most of check j's label overlaps are with a HUD band copied from an OCR proposal; the top strips of all 35 zoomed stills show no HUD there, and narrowing the band would mean a full re-render. Check j's 3 rows over game text include the worst case, line A8_18, which covers the boss health bar that its own line mentions. All of it went to me as known issues.</p>
+      <p><b>Thumbnails:</b> <code>thumb_framed.py</code> composes them from game frames with a scripted text layout. Nothing in them is AI-generated. By upload day there was a sheet of 9 options to pick from; see stage 7.</p>
     </div>
-    <figure>
-      <img src="img/thumbs.jpg" alt="Two thumbnail options with their text pixelated: the hero and the frozen girl in a freezer, and a retro sunburst poster" width="1292" height="360" loading="lazy">
-      <figcaption>Two options from the sheet of 9 that I did not pick; all text is pixelated. No thumbnail that was ever on the video is shown, because it would lead to the video.</figcaption>
-    </figure>
-  </section>
+  </details>
 
-  <h2>Test run</h2>
-  <p>The video factory's test suite (a few files cover neighbouring tools) was run on 30 Oct 2026, on the laptop that made this video: 21 <code>unittest</code> files under Python 3.13.15, one process per file, about 5 minutes in all. <b>1,413 tests: 1,410 passed, 2 failed, 1 skipped.</b> This tests the code as of 30 Oct, not the exact version that built this video.</p>
-  <div class="table">
-    <table>
-      <thead><tr><th>File</th><th class="num-r">Tests</th><th>Result</th><th class="num-r">Time</th></tr></thead>
-      <tbody>
-        <tr><td><code>test_audit_evidence.py</code></td><td class="num-r">48</td><td class="pass">OK</td><td class="num-r">1.3 s</td></tr>
-        <tr><td><code>test_audit_report.py</code></td><td class="num-r">50</td><td class="pass">OK</td><td class="num-r">0.9 s</td></tr>
-        <tr><td><code>test_build_story_holds.py</code></td><td class="num-r">5</td><td class="pass">OK</td><td class="num-r">0.2 s</td></tr>
-        <tr><td><code>test_compose_common.py</code></td><td class="num-r">80</td><td class="pass">OK</td><td class="num-r">11.5 s</td></tr>
-        <tr><td><code>test_compose_devices.py</code></td><td class="num-r">35</td><td class="pass">OK</td><td class="num-r">118.3 s</td></tr>
-        <tr><td><code>test_compose_gloss.py</code></td><td class="num-r">6</td><td class="pass">OK</td><td class="num-r">0.2 s</td></tr>
-        <tr><td><code>test_compose_ledger.py</code></td><td class="num-r">49</td><td class="pass">OK</td><td class="num-r">38.8 s</td></tr>
-        <tr><td><code>test_compose_plan_identity.py</code></td><td class="num-r">3</td><td class="pass">OK</td><td class="num-r">1.2 s</td></tr>
-        <tr><td><code>test_compose_rules.py</code></td><td class="num-r">186</td><td class="pass">OK</td><td class="num-r">0.4 s</td></tr>
-        <tr><td><code>test_compose_story.py</code></td><td class="num-r">96</td><td class="pass">OK</td><td class="num-r">17.3 s</td></tr>
-        <tr><td><code>test_compose_subs.py</code></td><td class="num-r">193</td><td class="fail">1 failure</td><td class="num-r">23.7 s</td></tr>
-        <tr><td><code>test_dash_split.py</code></td><td class="num-r">6</td><td class="pass">OK</td><td class="num-r">0.4 s</td></tr>
-        <tr><td><code>test_entity_frame_check.py</code></td><td class="num-r">38</td><td class="pass">OK</td><td class="num-r">0.2 s</td></tr>
-        <tr><td><code>test_entity_lint.py</code></td><td class="num-r">114</td><td class="pass">OK</td><td class="num-r">15.5 s</td></tr>
-        <tr><td><code>test_footnote_audit.py</code></td><td class="num-r">47</td><td class="pass">OK</td><td class="num-r">0.5 s</td></tr>
-        <tr><td><code>test_lint_script.py</code></td><td class="num-r">133</td><td class="pass">OK</td><td class="num-r">0.3 s</td></tr>
-        <tr><td><code>test_nexus_popularity.py</code></td><td class="num-r">23</td><td class="pass">OK</td><td class="num-r">0.1 s</td></tr>
-        <tr><td><code>test_qc_compose.py</code></td><td class="num-r">151</td><td class="pass">OK</td><td class="num-r">30.0 s</td></tr>
-        <tr><td><code>test_readback.py</code></td><td class="num-r">56</td><td class="pass">OK</td><td class="num-r">2.6 s</td></tr>
-        <tr><td><code>test_stitch_donors.py</code></td><td class="num-r">33</td><td class="pass">OK, 1 skipped</td><td class="num-r">35.3 s</td></tr>
-        <tr><td><code>test_write_guards.py</code></td><td class="num-r">61</td><td class="fail">1 failure</td><td class="num-r">4.0 s</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <ul>
-    <li><b>The failure in <code>test_compose_subs.py</code></b> is a known open item. The detector that decides when a subtitle needs a dark halo catches 31 of 38 cues that two blind labelling passes (one by Claude Code, one by a fresh Opus agent) marked as bright: 0.82, against a bar of 0.90. Changing the threshold is my decision and still pending, and the labels are not changed to make the test pass.</li>
-    <li><b>The failure in <code>test_write_guards.py</code></b> is the test doing its job. A script added on 29 Oct uses the guard against unsafe file writes but was never added to the test's scan list. That fix has not been made yet.</li>
-    <li>The skip is the local speech-recognition path, which runs only when an environment variable turns it on. A 22nd file, <code>test_shim_voices.py</code>, is a manual end-to-end check that needs a running voice server, so it is not part of the suite.</li>
-  </ul>
-
-  <h2>Who did what</h2>
-  <div class="cols">
-    <div class="box">
-      <h3>Me</h3>
+  <details class="more">
+    <summary><span class="num">7</span> Gate G1: publish <span class="tag script">API</span><span class="tag human">me</span><span class="gist">My yes to upload; the API does what it can and reads it back, and I do the Studio-only steps.</span></summary>
+    <div class="in">
       <ul>
-        <li>Set the house rules the pipeline follows, for example that narration starts on the first frame (QC checks it), and approved changes to the pipeline.</li>
-        <li>For this video: picked the game and the footage to work from, and said yes to the download.</li>
-        <li>Answered G0: use the official Chinese names from the game's store page, and "call it <span lang="zh-Hans">一个声音</span> and don't guess".</li>
-        <li>Picked answers for the six points the agents could not settle.</li>
-        <li>Said "yes, upload" without the A8_18 fix, picked the thumbnail, did the Studio-only steps and published the video myself.</li>
-        <li>Said yes to each Short upload and linked each Short to the video in Studio.</li>
-        <li>After publishing: picked the new title, asked for more eye-catching thumbnails, and picked the final one.</li>
+        <li>I got the review package: the video in six phone-size parts, the QC report, and a review note that offered a fix for A8_18 (re-voice and rebuild, about an hour). I replied "yes, upload - private, with thumbnail #4", so A8_18 stayed as it was.</li>
+        <li>My rule for publishing: if the YouTube API can do a step, Claude Code does it and reads the result back; if only YouTube Studio can, Claude Code gives me a short list and I do it by hand. The table below shows how that split for this video.</li>
+        <li>After publishing, I picked a new hook-first title, which was applied through the API. The next day I asked for more eye-catching thumbnails, then said the colours still felt low-energy. From the next round I picked a split design, asked for a different frame, and picked its hearts-frame variant. Each change was set through the API and read back.</li>
+      </ul>
+      <div class="table">
+        <table>
+          <thead><tr><th>Step</th><th>Who</th><th>How</th></tr></thead>
+          <tbody>
+            <tr><td>Upload the video as private, with thumbnail #4, the title, description, chapters and an English title, then read them back (the served thumbnail matched the file)</td><td>Claude Code</td><td>YouTube Data API</td></tr>
+            <tr><td>YouTube's copyright check, the game-title field, and checking the AI-content label (the API sets it at upload but does not return it)</td><td>Me</td><td>YouTube Studio; the API does not cover these</td></tr>
+            <tr><td>Make the video public, after the Studio steps</td><td>Me</td><td>YouTube Studio, the same day</td></tr>
+            <tr><td>The new title, then the new thumbnails, each read back</td><td>Claude Code, on my picks</td><td>YouTube Data API</td></tr>
+            <tr><td>33 Shorts of 37–44 seconds made from this video's script and footage (by 30 Oct): upload each, schedule it to go public about 20 minutes later, read it back, and check it is live</td><td>Claude Code, after my yes to each upload</td><td>YouTube Data API</td></tr>
+            <tr><td>Link each Short to this video (the related-video field)</td><td>Me</td><td>YouTube Studio; the API does not cover it</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <img src="img/thumbs.jpg" alt="Two thumbnail options with their text pixelated: the hero and the frozen girl in a freezer, and a retro sunburst poster" width="1292" height="360" loading="lazy">
+        <figcaption>Two options from the sheet of 9 that I did not pick; all text is pixelated. No thumbnail that was ever on the video is shown, because it would lead to the video.</figcaption>
+      </figure>
+    </div>
+  </details>
+
+  <details class="more" id="best">
+    <summary>My story video with the most watch time so far<span class="gist">745 hours and 9,308 views, made with an earlier, more hand-run version of the pipeline.</span></summary>
+    <div class="in">
+      <dl class="best">
+        <div><dt>Watch time</dt><dd><span class="big">745 hours</span> from 9,234 views · YouTube Analytics API</dd></div>
+        <div><dt>Views</dt><dd><span class="big">9,308</span> · YouTube Data API</dd></div>
+        <div><dt>Watched on average</dt><dd><span class="big">35%</span> · about 9 of its 25 minutes</dd></div>
+      </dl>
+      <p>A Mandarin story explainer of a different game, published in early October 2026, before the story factory below was specified (9 Oct). It was made with an earlier, more hand-run version. Claude Code agents researched the game; a writer agent drafted the script; three checker agents reviewed it for facts, house rules and fit with the footage; an agent wrote the render script; and two QA passes checked picture and audio. I picked the game, approved the script, asked for the video and its thumbnail to open on the female lead, and published it. That version had no act-by-act reading of the footage by agents, no question sheet, no shared script lint (only a one-off validator written for that script) and no evidence audit. So the case file below follows a newer run that went through all of the current stages.</p>
+      <p class="muted">Read 30 Oct 2026, from publishing to that day.</p>
+    </div>
+  </details>
+  <details class="more">
+    <summary>This video's views and watch time<span class="gist">74 views and 5.0 hours of watch time by 30 Oct: newer and much smaller than the one above.</span></summary>
+    <div class="in">
+      <dl class="facts">
+        <div><dt>The video</dt><dd>A Mandarin story explainer of about half an hour, about a game released in 2026. Published October 2026.</dd></div>
+        <div><dt>What the agents read</dt><dd>A 4:04:58 recording, as 3,259 caption lines and 1,764 still frames, in 226 scenes and 8 acts.</dd></div>
+        <div><dt>Views</dt><dd><span class="big">74</span> · YouTube Data API</dd></div>
+        <div><dt>Watch time</dt><dd><span class="big">5.0 hours</span> from 59 views; 17.8% of the video watched on average · YouTube Analytics API</dd></div>
+      </dl>
+      <p class="muted" style="margin-top:10px">All numbers read on 30 Oct 2026, from publishing to that day. Analytics runs a few days behind the public view counter, which is why the two view counts differ. This video is newer and much smaller than the one above; it is here because its run went through all of the current stages.</p>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary>Test run: 1,413 tests<span class="gist">1,410 passed, 2 failed (both explained), 1 skipped: 21 test files, run on 30 Oct 2026.</span></summary>
+    <div class="in">
+      <p>The video factory's test suite (a few files cover neighbouring tools) was run on 30 Oct 2026, on the laptop that made this video: 21 <code>unittest</code> files under Python 3.13.15, one process per file, about 5 minutes in all. <b>1,413 tests: 1,410 passed, 2 failed, 1 skipped.</b> This tests the code as of 30 Oct, not the exact version that built this video.</p>
+      <div class="table">
+        <table>
+          <thead><tr><th>File</th><th class="num-r">Tests</th><th>Result</th><th class="num-r">Time</th></tr></thead>
+          <tbody>
+            <tr><td><code>test_audit_evidence.py</code></td><td class="num-r">48</td><td class="pass">OK</td><td class="num-r">1.3 s</td></tr>
+            <tr><td><code>test_audit_report.py</code></td><td class="num-r">50</td><td class="pass">OK</td><td class="num-r">0.9 s</td></tr>
+            <tr><td><code>test_build_story_holds.py</code></td><td class="num-r">5</td><td class="pass">OK</td><td class="num-r">0.2 s</td></tr>
+            <tr><td><code>test_compose_common.py</code></td><td class="num-r">80</td><td class="pass">OK</td><td class="num-r">11.5 s</td></tr>
+            <tr><td><code>test_compose_devices.py</code></td><td class="num-r">35</td><td class="pass">OK</td><td class="num-r">118.3 s</td></tr>
+            <tr><td><code>test_compose_gloss.py</code></td><td class="num-r">6</td><td class="pass">OK</td><td class="num-r">0.2 s</td></tr>
+            <tr><td><code>test_compose_ledger.py</code></td><td class="num-r">49</td><td class="pass">OK</td><td class="num-r">38.8 s</td></tr>
+            <tr><td><code>test_compose_plan_identity.py</code></td><td class="num-r">3</td><td class="pass">OK</td><td class="num-r">1.2 s</td></tr>
+            <tr><td><code>test_compose_rules.py</code></td><td class="num-r">186</td><td class="pass">OK</td><td class="num-r">0.4 s</td></tr>
+            <tr><td><code>test_compose_story.py</code></td><td class="num-r">96</td><td class="pass">OK</td><td class="num-r">17.3 s</td></tr>
+            <tr><td><code>test_compose_subs.py</code></td><td class="num-r">193</td><td class="fail">1 failure</td><td class="num-r">23.7 s</td></tr>
+            <tr><td><code>test_dash_split.py</code></td><td class="num-r">6</td><td class="pass">OK</td><td class="num-r">0.4 s</td></tr>
+            <tr><td><code>test_entity_frame_check.py</code></td><td class="num-r">38</td><td class="pass">OK</td><td class="num-r">0.2 s</td></tr>
+            <tr><td><code>test_entity_lint.py</code></td><td class="num-r">114</td><td class="pass">OK</td><td class="num-r">15.5 s</td></tr>
+            <tr><td><code>test_footnote_audit.py</code></td><td class="num-r">47</td><td class="pass">OK</td><td class="num-r">0.5 s</td></tr>
+            <tr><td><code>test_lint_script.py</code></td><td class="num-r">133</td><td class="pass">OK</td><td class="num-r">0.3 s</td></tr>
+            <tr><td><code>test_nexus_popularity.py</code></td><td class="num-r">23</td><td class="pass">OK</td><td class="num-r">0.1 s</td></tr>
+            <tr><td><code>test_qc_compose.py</code></td><td class="num-r">151</td><td class="pass">OK</td><td class="num-r">30.0 s</td></tr>
+            <tr><td><code>test_readback.py</code></td><td class="num-r">56</td><td class="pass">OK</td><td class="num-r">2.6 s</td></tr>
+            <tr><td><code>test_stitch_donors.py</code></td><td class="num-r">33</td><td class="pass">OK, 1 skipped</td><td class="num-r">35.3 s</td></tr>
+            <tr><td><code>test_write_guards.py</code></td><td class="num-r">61</td><td class="fail">1 failure</td><td class="num-r">4.0 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul>
+        <li><b>The failure in <code>test_compose_subs.py</code></b> is a known open item. The detector that decides when a subtitle needs a dark halo catches 31 of 38 cues that two blind labelling passes (one by Claude Code, one by a fresh Opus agent) marked as bright: 0.82, against a bar of 0.90. Changing the threshold is my decision and still pending, and the labels are not changed to make the test pass.</li>
+        <li><b>The failure in <code>test_write_guards.py</code></b> is the test doing its job. A script added on 29 Oct uses the guard against unsafe file writes but was never added to the test's scan list. That fix has not been made yet.</li>
+        <li>The skip is the local speech-recognition path, which runs only when an environment variable turns it on. A 22nd file, <code>test_shim_voices.py</code>, is a manual end-to-end check that needs a running voice server, so it is not part of the suite.</li>
       </ul>
     </div>
-    <div class="box">
-      <h3>Claude Code and its agents</h3>
-      <ul>
-        <li>Built the pipeline to my direction: the scripts, the agent workflows, and the lint, audit and QC checks.</li>
-        <li>Ran the stages of this video: the question sheet, the reading, the script, the quiz and audit, the voice, the build, the QC, the thumbnail options, the private upload with its thumbnail and metadata through the YouTube Data API, the later title and thumbnail changes through the API, and the read-backs.</li>
-        <li>Made 33 Shorts from the video's script and footage and published them through the API: each uploaded, scheduled to go public, read back and checked live.</li>
-        <li>Did the frame checks behind the review points and the narrowed lines shown above.</li>
-      </ul>
-      <p class="muted" style="margin:8px 0 0">I did not write the pipeline's code or read the four hours of footage. My part is the decisions on the left.</p>
+  </details>
+
+  <details class="more">
+    <summary>Who did what, in full<span class="gist">The calls I made on this video, and what Claude Code and its agents did.</span></summary>
+    <div class="in">
+      <div class="cols">
+        <div class="box">
+          <h3>Me</h3>
+          <ul>
+            <li>Set the house rules the pipeline follows, for example that narration starts on the first frame (QC checks it), and approved changes to the pipeline.</li>
+            <li>For this video: picked the game and the footage to work from, and said yes to the download.</li>
+            <li>Answered G0: use the official Chinese names from the game's store page, and "call it <span lang="zh-Hans">一个声音</span> and don't guess".</li>
+            <li>Picked answers for the six points the agents could not settle.</li>
+            <li>Said "yes, upload" without the A8_18 fix, picked the thumbnail, did the Studio-only steps and published the video myself.</li>
+            <li>Said yes to each Short upload and linked each Short to the video in Studio.</li>
+            <li>After publishing: picked the new title, asked for more eye-catching thumbnails, and picked the final one.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Claude Code and its agents</h3>
+          <ul>
+            <li>Built the pipeline to my direction: the scripts, the agent workflows, and the lint, audit and QC checks.</li>
+            <li>Ran the stages of this video: the question sheet, the reading, the script, the quiz and audit, the voice, the build, the QC, the thumbnail options, the private upload with its thumbnail and metadata through the YouTube Data API, the later title and thumbnail changes through the API, and the read-backs.</li>
+            <li>Made 33 Shorts from the video's script and footage and published them through the API: each uploaded, scheduled to go public, read back and checked live.</li>
+            <li>Did the frame checks behind the review points and the narrowed lines shown above.</li>
+          </ul>
+          <p class="muted" style="margin:8px 0 0">I did not write the pipeline's code or read the four hours of footage. My part is the decisions on the left.</p>
+        </div>
+      </div>
     </div>
-  </div>
+  </details>
 
   <footer>
     Tan Carlson · Built with Claude Code · Numbers read 30 Oct 2026 · <a href="../">Back to game projects</a>
   </footer>
 </div>
+<script>
+  // Open all / close all, and open a folded section when a link points at it.
+  (function () {
+    var btn = document.querySelector('.toggle');
+    var all = document.querySelectorAll('details.more');
+    if (btn) btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-pressed') !== 'true';
+      all.forEach(function (d) { d.open = open; });
+      btn.setAttribute('aria-pressed', String(open));
+      btn.textContent = open ? 'Close all' : 'Open all';
+    });
+    function openTarget() {
+      var t = location.hash && document.getElementById(location.hash.slice(1));
+      if (t && t.tagName === 'DETAILS') t.open = true;
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>
 </body>
 </html>

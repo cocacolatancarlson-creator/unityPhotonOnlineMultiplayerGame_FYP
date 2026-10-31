@@ -16,8 +16,6 @@
   body { font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Roboto, Arial, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif; }
   a { color: var(--accent); }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
-  .back { display: inline-block; margin-top: 18px; font-size: 15px; text-decoration: none; }
-  .back:hover { text-decoration: underline; }
   header { padding: 18px 0 18px; border-bottom: 1px solid var(--line); }
   header .who { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
   h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0 0 10px; }
@@ -45,13 +43,11 @@
   figcaption { color: var(--muted); font-size: 13px; margin-top: 5px; }
 
   .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 14px; font-size: 14px; }
-  .chip { border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; background: var(--panel); white-space: nowrap; }
+  .chip { border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; background: var(--bg); white-space: nowrap; }
   .chip.human { color: #f2cc60; background: var(--warnbg); border-color: var(--warn); font-weight: 600; }
   .chip.agent { color: #d2a8ff; background: #2a1a3d; border-color: #5b3a85; }
   .arr { color: var(--muted); }
 
-  .stage { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 0 0 14px; }
-  .stage > h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .num { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--panel2);
          border: 1px solid var(--line); font-size: 14px; font-weight: 700; }
   .tag { display: inline-block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px;
@@ -75,89 +71,160 @@
 
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; }
   .box { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  /* Short version, 2026-10-31: project nav, an "At a glance" block on top, the detail folded below it. */
+  .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 14px 0 0; font-size: 14px; }
+  .nav span { color: var(--muted); }
+  .nav a { text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .nav a[aria-current="page"] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--accent); }
+  .glance { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 16px 18px; margin: 22px 0 0; }
+  .glance > h2 { font-size: 20px; margin: 0 0 6px; }
+  .oneline { font-size: 18px; margin: 0 0 14px; }
+  .hl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 10px; margin: 0 0 14px; }
+  .hl > div { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .hl b { display: block; font-size: 22px; line-height: 1.25; color: var(--accent); }
+  .hl .gate { border-color: var(--warn); }
+  .hl .gate b { color: #f2cc60; }
+  .hl p { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+  .glance .chip { white-space: normal; }
+  .pics2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 14px; align-items: start; }
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; margin: 14px 0 0; }
+  .pics2 .roles { margin: 0; }
+  .roles > div { border-top: 3px solid var(--line); padding-top: 8px; font-size: 15px; }
+  .roles .me { border-color: var(--warn); }
+  .roles .ai { border-color: #8957e5; }
+  .roles h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin: 0 0 4px; }
+  .roles p { margin: 0; }
+  .detail-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin: 40px 0 10px; }
+  .detail-head h2 { margin: 0; }
+  .toggle { background: var(--panel2); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+  .toggle:hover { border-color: var(--accent); }
+  details.more { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin: 0 0 10px; }
+  details.more > summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 12px 16px; font-size: 18px; font-weight: 600; }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "\25B8"; display: inline-block; width: 14px; color: var(--accent); transition: transform .15s; }
+  details.more[open] > summary::before { transform: rotate(90deg); }
+  details.more > summary:hover { color: var(--accent); }
+  details.more > summary .gist { flex-basis: 100%; padding-left: 22px; font-size: 14px; font-weight: 400; color: var(--muted); }
+  details.more > .in { padding: 2px 18px 16px; }
+  details.more .box, details.more .best div, details.more .facts div { background: var(--bg); }
+  details.more th { background: var(--panel2); }
+
   footer { margin: 44px 0 30px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="../">← Game projects</a>
+  <nav class="nav" aria-label="Projects">
+    <span>Tan Carlson · projects:</span>
+    <a href="../story-factory/">1 · AI video pipeline</a>
+    <a href="../live-automation/" aria-current="page">2 · Live streaming with an AI co-host</a>
+    <a href="../">3 · Unity game (play it)</a>
+    <a href="../2d/">2D game, 2021</a>
+  </nav>
   <header>
     <p class="who">Tan Carlson · Software Engineer · automation and AI integration</p>
     <h1>Live streaming with an AI co-host: one session, start to live</h1>
-    <p class="lead">I stream games to YouTube and Twitch at the same time from two PCs. One runs the game; a laptop runs OBS, an AI co-host and the automation. Claude Code built the automation to my direction; I start each session and make the calls at its gates. This page follows one real session in late October 2026, from pressing START to live on both platforms, using screen recordings of both PCs.</p>
+    <p class="lead">I stream games to YouTube and Twitch at the same time from two PCs. One runs the game; a laptop runs OBS, an AI co-host and the automation. Claude Code built the automation to my direction. This page follows one real session in late October 2026, from pressing START to live on both platforms, using screen recordings of both PCs.</p>
   </header>
+
+  <section class="glance" aria-labelledby="glance-h">
+    <h2 id="glance-h">At a glance</h2>
+    <p class="oneline">One START on each PC sets everything up. No stream title, description, tags, category or thumbnail changes until I approve it on a review card, and an AI co-host comments on the game in chat within set limits.</p>
+    <div class="hl">
+      <div><b>1 START per PC</b><p>Each opens what the stream needs and pauses file sync; the laptop's also waits until YouTube is ready (19 s this time).</p></div>
+      <div class="gate"><b>Titles wait for Apply</b><p>The stream's title, description, tags, category and thumbnail wait on a review card. After Apply they are written (on Twitch: title, category and tags) and, except the thumbnail, read back.</p></div>
+      <div><b>Under 1 minute</b><p>from my Apply to live on both YouTube and Twitch in this session. I start the stream myself.</p></div>
+      <div><b>Labelled and capped</b><p>The AI co-host's own lines: at most one per 20 s; its replies to viewers: one per 30 s. Every line is labelled as AI, and one hotkey mutes it at once.</p></div>
+    </div>
+    <div class="flow">
+      <span class="chip">1 Game PC: START</span><span class="arr">→</span>
+      <span class="chip">2 Laptop: apps start, wait for YouTube</span><span class="arr">→</span>
+      <span class="chip human">3 Review card: I press Apply</span><span class="arr">→</span>
+      <span class="chip">4 Write, then read back</span><span class="arr">→</span>
+      <span class="chip human">5 I start the stream</span><span class="arr">→</span>
+      <span class="chip">6 Watcher: live, restart chat capture</span><span class="arr">→</span>
+      <span class="chip agent">7 AI co-host comments</span>
+    </div>
+    <p class="muted">Purple = the AI model, gold = me; the grey steps are scripts and APIs.</p>
+    <div class="pics2">
+      <figure>
+        <img src="img/review_card.jpg" alt="The review card: game Party Panic detected on the Game PC, YouTube title, description, tags, category and thumbnail, then the Twitch title, category and tags, with Apply, Skip and Cancel buttons" width="1384" height="1096">
+        <figcaption>The review card in this session. Nothing on it is written until I press Apply. Stream titles are replaced with [stream title] and the description is blurred.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/youtube_live.jpg" alt="The YouTube watch page while live, with the AI co-host's line in the live chat" width="1920" height="1028">
+        <figcaption>Live on YouTube, with the AI co-host on screen and its first line for this game in the chat. Channel names are hidden.</figcaption>
+      </figure>
+    </div>
+    <div class="roles">
+      <div class="me"><h3>Me</h3><p>Chose the two-PC setup and asked for or approved its rules: a review card before any title, tag or thumbnail is written, AI lines labelled as AI, a mute hotkey. I ran the live tests and handle the YouTube Studio settings the API cannot reach.</p></div>
+      <div class="ai"><h3>Claude Code</h3><p>Wrote the launchers, the review card, the YouTube and Twitch writers with read-back, the live watcher and the chat relay, with 167 Python tests and 809 PowerShell checks for the metadata step (30 Oct 2026). OBS, the AI character app and the chat tools are existing apps.</p></div>
+    </div>
+  </section>
 
   <div class="notice"><b>The channel stays anonymous here.</b> In the screenshots, channel, account and persona names, stream titles and branded scene names are replaced with bracketed labels such as [channel]. One persona tag on the review card is replaced with <span lang="zh-Hans">"AI主播"</span> (AI host), and the stream description, which is reused on every stream, is blurred. The avatar is my own 3D model. I can show the channel in an interview.</div>
 
-  <h2>The session in numbers</h2>
-  <dl class="best">
-    <div><dt>Waiting for YouTube</dt><dd><span class="big">19 s</span> until the broadcast was ready, checked 3 times in all (an earlier start that day took 89 s)</dd></div>
-    <div><dt>Apply to live on YouTube</dt><dd><span class="big">33 s</span> from the Twitch write and read-back to YouTube confirmed live, including my press of Start</dd></div>
-    <div><dt>Chat capture gap</dt><dd><span class="big">1.2 s</span> while it restarted for the live YouTube chat</dd></div>
-    <div><dt>OBS, 9 s after going live</dt><dd><span class="big">60 fps</span>, 0 of 491 frames dropped on the Twitch output</dd></div>
-  </dl>
-  <p class="muted">Times are from the launcher logs (Malaysia time); the OBS figures are from its Stats panel in the screenshot below.</p>
-
-  <h2>The session, step by step</h2>
-  <div class="flow">
-    <span class="chip">Game PC: START</span><span class="arr">→</span>
-    <span class="chip">Laptop: start apps in order</span><span class="arr">→</span>
-    <span class="chip">Wait for YouTube</span><span class="arr">→</span>
-    <span class="chip human">Review card: Apply</span><span class="arr">→</span>
-    <span class="chip">Write, then read back</span><span class="arr">→</span>
-    <span class="chip human">I start the stream</span><span class="arr">→</span>
-    <span class="chip">Watcher: live, restart chat capture</span><span class="arr">→</span>
-    <span class="chip agent">AI co-host comments</span>
+  <div class="detail-head">
+    <h2>The details</h2>
+    <button class="toggle" type="button" aria-pressed="false">Open all</button>
   </div>
-  <p class="muted">Purple = the AI model, gold = me; the grey steps are scripts and APIs.</p>
+  <p class="muted">Each step opens with a click. Purple = the AI model, gold = me, blue = scripts and APIs.</p>
 
-  <section class="stage">
-    <h3><span class="num">1</span> Game PC: one START <span class="tag script">script</span></h3>
-    <div class="two">
-      <div>
-        <p>The Game PC's START stops file sync for the session, sets the audio routing, opens a small chat overlay that floats over the game, then asks which game I am playing. The answer starts a small now-playing feed on the home network, which the laptop reads in step 3.</p>
-        <p>File sync is stopped on purpose: on 30 July 2026 a sync of a growing recording, in the middle of a stream, collapsed the Twitch bitrate. File sync starts again when I stop the session.</p>
-      </div>
-      <figure>
-        <img src="img/gamepc_start.jpg" alt="The Game PC start script's step log, ending with a numbered list of games and the question: What are we on today?" width="1115" height="628">
-        <figcaption>The step log, then the game menu.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="stage">
-    <h3><span class="num">2</span> Laptop: apps in a fixed order <span class="tag script">script</span></h3>
-    <p>The laptop's START opens the apps the stream needs in an order that matters: the chat capture app (Social Stream Ninja) before OBS, because OBS only displays what that app produces, and OBS last of the core apps, because it takes the capture card that carries the Game PC's picture for itself. The AI co-host and its chat relay start right after OBS. File sync stops here too.</p>
-    <p>It then opens YouTube Studio and re-checks YouTube with read-only dry runs until the broadcast is ready, for up to 90 seconds. In this session that took 19 seconds and 3 checks; an earlier start the same day took 89 seconds. Until a fix on 10 October, the launcher read YouTube too early, and YouTube failed while Twitch worked; see the table at the end.</p>
-  </section>
-
-  <section class="stage">
-    <h3><span class="num">3</span> Gate: the review card <span class="tag human">me</span></h3>
-    <div class="two">
-      <figure>
-        <img src="img/review_card.jpg" alt="The review card: game Party Panic detected on the Game PC, YouTube title, description, tags, category and thumbnail, then the Twitch title, category and tags, with Apply, Skip and Cancel buttons" width="1384" height="1096">
-        <figcaption>The card in this session. Stream titles are replaced with [stream title] and the description is blurred.</figcaption>
-      </figure>
-      <div>
-        <p>No title, description, tags, category or thumbnail is written until I press <b>Apply</b>. The card proposes:</p>
-        <ul>
-          <li>the game, detected on the Game PC, with a picker if it is wrong;</li>
-          <li>a title with the next part number for that game;</li>
-          <li>a description that includes an AI disclosure in Chinese and English (blurred here);</li>
-          <li>tags and category for both platforms;</li>
-          <li>a YouTube thumbnail: the game's Steam library art, cropped by a script (nothing AI-generated).</li>
-        </ul>
-        <p>Fail-closed rules: an empty field leaves the old value as it is, never cleared. If the waiting YouTube broadcast changes between the review and Apply, Apply is blocked. "Save my edits" keeps only the fields I changed, as that game's default.</p>
+  <details class="more">
+    <summary><span class="num">1</span> Game PC: one START <span class="tag script">script</span><span class="gist">Pauses file sync, sets the audio, opens the chat overlay and asks which game I am playing.</span></summary>
+    <div class="in">
+      <div class="two">
+        <div>
+          <p>The Game PC's START stops file sync for the session, sets the audio routing, opens a small chat overlay that floats over the game, then asks which game I am playing. The answer starts a small now-playing feed on the home network, which the laptop reads in step 3.</p>
+          <p>File sync is stopped on purpose: on 30 July 2026 a sync of a growing recording, in the middle of a stream, collapsed the Twitch bitrate. File sync starts again when I stop the session.</p>
+        </div>
+        <figure>
+          <img src="img/gamepc_start.jpg" alt="The Game PC start script's step log, ending with a numbered list of games and the question: What are we on today?" width="1115" height="628">
+          <figcaption>The step log, then the game menu.</figcaption>
+        </figure>
       </div>
     </div>
-  </section>
+  </details>
 
-  <section class="stage">
-    <h3><span class="num">4</span> Write, then read back <span class="tag script">API</span></h3>
-    <p>Apply writes the YouTube title, description, tags, category and thumbnail through the YouTube Data API, and the Twitch title, category and tags through Streamer.bot. Then it reads them back from each platform to confirm they were saved (the YouTube thumbnail is set, not read back). Going live stays a separate step: I start the stream myself.</p>
-    <div class="art">
-      <p class="file">stream_shows/runtime/studio_wait.log, twitch.log, watcher.log · this session, lightly trimmed, broadcast id removed</p>
-<pre>15:51:40  wait start: show game, dry run 1 = code 11 after 2 s, waiting up to 90 s
+  <details class="more">
+    <summary><span class="num">2</span> Laptop: apps in a fixed order <span class="tag script">script</span><span class="gist">Opens the apps in the order that matters, then waits until YouTube is ready (19 s this time).</span></summary>
+    <div class="in">
+      <p>The laptop's START opens the apps the stream needs in an order that matters: the chat capture app (Social Stream Ninja) before OBS, because OBS only displays what that app produces, and OBS last of the core apps, because it takes the capture card that carries the Game PC's picture for itself. The AI co-host and its chat relay start right after OBS. File sync stops here too.</p>
+      <p>It then opens YouTube Studio and re-checks YouTube with read-only dry runs until the broadcast is ready, for up to 90 seconds. In this session that took 19 seconds and 3 checks; an earlier start the same day took 89 seconds. Until a fix on 10 October, the launcher read YouTube too early, and YouTube failed while Twitch worked; see the table at the end.</p>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary><span class="num">3</span> Gate: the review card <span class="tag human">me</span><span class="gist">Shows everything it will write; nothing is written until I press Apply.</span></summary>
+    <div class="in">
+      <div class="two">
+        <figure>
+          <img src="img/review_card.jpg" alt="The review card: game Party Panic detected on the Game PC, YouTube title, description, tags, category and thumbnail, then the Twitch title, category and tags, with Apply, Skip and Cancel buttons" width="1384" height="1096">
+          <figcaption>The card in this session. Stream titles are replaced with [stream title] and the description is blurred.</figcaption>
+        </figure>
+        <div>
+          <p>No title, description, tags, category or thumbnail is written until I press <b>Apply</b>. The card proposes:</p>
+          <ul>
+            <li>the game, detected on the Game PC, with a picker if it is wrong;</li>
+            <li>a title with the next part number for that game;</li>
+            <li>a description that includes an AI disclosure in Chinese and English (blurred here);</li>
+            <li>tags and category for both platforms;</li>
+            <li>a YouTube thumbnail: the game's Steam library art, cropped by a script (nothing AI-generated).</li>
+          </ul>
+          <p>Fail-closed rules: an empty field leaves the old value as it is, never cleared. If the waiting YouTube broadcast changes between the review and Apply, Apply is blocked. "Save my edits" keeps only the fields I changed, as that game's default.</p>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary><span class="num">4</span> Write, then read back <span class="tag script">API</span><span class="gist">Writes to YouTube and Twitch, then reads the values back (not the YouTube thumbnail). With a log excerpt.</span></summary>
+    <div class="in">
+      <p>Apply writes the YouTube title, description, tags, category and thumbnail through the YouTube Data API, and the Twitch title, category and tags through Streamer.bot. Then it reads them back from each platform to confirm they were saved (the YouTube thumbnail is set, not read back). Going live stays a separate step: I start the stream myself.</p>
+      <div class="art">
+        <p class="file">stream_shows/runtime/studio_wait.log, twitch.log, watcher.log · this session, lightly trimmed, broadcast id removed</p>
+  <pre>15:51:40  wait start: show game, dry run 1 = code 11 after 2 s, waiting up to 90 s
 15:51:47  dry run 2 = code 11 at 9 s
 15:51:57  dry run 3 = code 0 at 19 s
 15:51:58  twitch get -> ok
@@ -165,105 +232,156 @@
 15:52:16  watcher: waiting for the broadcast to go live (every 15 s)
 15:52:48  watcher: wait-live code 0, lifecycle live
 15:52:49  SSN restarted: closed gracefully=True, down about 1.2 s</pre>
-      <p class="en">A dry run is a read-only check. Code 11 means YouTube had no broadcast ready yet; code 0 means it was ready. Apply was pressed between 15:51:58 and 15:52:15.</p>
-    </div>
-  </section>
-
-  <section class="stage">
-    <h3><span class="num">5</span> I start the stream <span class="tag human">me</span></h3>
-    <figure>
-      <img src="img/obs_live.jpg" alt="OBS while live: the game feed with the AI co-host avatar on the right, the vertical canvas for phones, and the Stats panel" width="1920" height="1141" loading="lazy">
-      <figcaption>OBS on the laptop, 9 seconds after going live. One OBS sends three streams: Twitch, YouTube's normal format and YouTube's phone format (right). Stats for the Twitch output: 0 of 491 frames dropped on the network, 6,180 kb/s; 60 fps overall. The bar at the bottom shows the co-host page sharing a window of the game feed: that is how it sees the game.</figcaption>
-    </figure>
-  </section>
-
-  <section class="stage">
-    <h3><span class="num">6</span> Live on both; the watcher restarts chat capture <span class="tag script">script</span></h3>
-    <p>A watcher checks the YouTube broadcast every 15 seconds. Once it is live, it restarts the chat capture app so that it attaches to the now-live YouTube chat. In this session chat capture was down for about 1.2 seconds.</p>
-    <div class="two">
-      <figure>
-        <img src="img/youtube_live.jpg" alt="The YouTube watch page while live, with the AI co-host's line in the live chat" width="1920" height="1028" loading="lazy">
-        <figcaption>YouTube, under a minute after going live. The co-host's first line for this game is in the live chat (YouTube's chat translation shows it in English).</figcaption>
-      </figure>
-      <figure>
-        <img src="img/twitch_live.jpg" alt="The Twitch channel page while live: the stream, the title row with category and tags, and one chat line from the AI co-host" width="900" height="796" loading="lazy">
-        <figcaption>Twitch: title, category and tags as set from the review card, and the co-host's first line after the game switch.</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <section class="stage">
-    <h3><span class="num">7</span> The AI co-host <span class="tag agent">AI model</span><span class="tag script">relay</span></h3>
-    <div class="two">
-      <div>
-        <p>The co-host is built on AITuberKit, an existing AI-character app, running Google Gemini 3.5 Flash-Lite with image input. It watches the game feed and comments on it. The chat relay that Claude Code wrote connects it to both platforms, with limits:</p>
-        <ul>
-          <li>each line is posted into the real YouTube and Twitch chats under my account, labelled as the AI: at most one line per 20 seconds, 200 characters;</li>
-          <li>it answers viewers too, one reply per 30 seconds; commands and bots, including its own posts, are dropped;</li>
-          <li>it checks that each post appeared on each platform, instead of assuming it did;</li>
-          <li>after 400 messages in a run it stops answering chat, and a system-wide hotkey mutes it at once.</li>
-        </ul>
+        <p class="en">A dry run is a read-only check. Code 11 means YouTube had no broadcast ready yet; code 0 means it was ready. Apply was pressed between 15:51:58 and 15:52:15.</p>
       </div>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary><span class="num">5</span> I start the stream <span class="tag human">me</span><span class="gist">One OBS sends three streams; 0 of 491 frames dropped on the Twitch output, 9 s after going live.</span></summary>
+    <div class="in">
       <figure>
-        <img src="img/gamepc_playing.jpg" alt="The game full screen on the Game PC, with a small overlay at the right showing the AI co-host's chat lines" width="1600" height="900" loading="lazy">
-        <figcaption>What I see while playing: the game full screen, and the co-host's lines in the small overlay (right). The "OFFLINE" badge above it is a separate viewer-count strip that still showed offline at this moment; that is an open issue.</figcaption>
+        <img src="img/obs_live.jpg" alt="OBS while live: the game feed with the AI co-host avatar on the right, the vertical canvas for phones, and the Stats panel" width="1920" height="1141" loading="lazy">
+        <figcaption>OBS on the laptop, 9 seconds after going live. One OBS sends three streams: Twitch, YouTube's normal format and YouTube's phone format (right). Stats for the Twitch output: 0 of 491 frames dropped on the network, 6,180 kb/s; 60 fps overall. The bar at the bottom shows the co-host page sharing a window of the game feed: that is how it sees the game.</figcaption>
       </figure>
     </div>
-    <div class="art">
-      <p class="file">aituberkit_test/ssn_relay.log · this session, trimmed; the AI's persona label is replaced by [AI label]</p>
-<pre>15:51:16  C  sendChat -> 200  [AI label]：<span lang="zh-Hans">终于到派对游戏啦！</span>
+  </details>
+
+  <details class="more">
+    <summary><span class="num">6</span> Live on both; the watcher restarts chat capture <span class="tag script">script</span><span class="gist">A watcher sees YouTube go live and restarts chat capture (down about 1.2 s).</span></summary>
+    <div class="in">
+      <p>A watcher checks the YouTube broadcast every 15 seconds. Once it is live, it restarts the chat capture app so that it attaches to the now-live YouTube chat. In this session chat capture was down for about 1.2 seconds.</p>
+      <div class="two">
+        <figure>
+          <img src="img/youtube_live.jpg" alt="The YouTube watch page while live, with the AI co-host's line in the live chat" width="1920" height="1028" loading="lazy">
+          <figcaption>YouTube, under a minute after going live. The co-host's first line for this game is in the live chat (YouTube's chat translation shows it in English).</figcaption>
+        </figure>
+        <figure>
+          <img src="img/twitch_live.jpg" alt="The Twitch channel page while live: the stream, the title row with category and tags, and one chat line from the AI co-host" width="900" height="796" loading="lazy">
+          <figcaption>Twitch: title, category and tags as set from the review card, and the co-host's first line after the game switch.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary><span class="num">7</span> The AI co-host <span class="tag agent">AI model</span><span class="tag script">relay</span><span class="gist">A Gemini-based co-host that watches the game; the relay labels and rate-limits its lines and confirms each one landed.</span></summary>
+    <div class="in">
+      <div class="two">
+        <div>
+          <p>The co-host is built on AITuberKit, an existing AI-character app, running Google Gemini 3.5 Flash-Lite with image input. It watches the game feed and comments on it. The chat relay that Claude Code wrote connects it to both platforms, with limits:</p>
+          <ul>
+            <li>each line is posted into the real YouTube and Twitch chats under my account, labelled as the AI: at most one line per 20 seconds, 200 characters;</li>
+            <li>it answers viewers too, one reply per 30 seconds; commands and bots, including its own posts, are dropped;</li>
+            <li>it checks that each post appeared on each platform, instead of assuming it did;</li>
+            <li>after 400 messages in a run it stops answering chat, and a system-wide hotkey mutes it at once.</li>
+          </ul>
+        </div>
+        <figure>
+          <img src="img/gamepc_playing.jpg" alt="The game full screen on the Game PC, with a small overlay at the right showing the AI co-host's chat lines" width="1600" height="900" loading="lazy">
+          <figcaption>What I see while playing: the game full screen, and the co-host's lines in the small overlay (right). The "OFFLINE" badge above it is a separate viewer-count strip that still showed offline at this moment; that is an open issue.</figcaption>
+        </figure>
+      </div>
+      <div class="art">
+        <p class="file">aituberkit_test/ssn_relay.log · this session, trimmed; the AI's persona label is replaced by [AI label]</p>
+  <pre>15:51:16  C  sendChat -> 200  [AI label]：<span lang="zh-Hans">终于到派对游戏啦！</span>
 15:51:17  C  landed on twitch
 15:51:17  A  drop flag:bot
 15:52:01  C  not seen on youtube 45s after posting</pre>
-      <p class="en">"<span lang="zh-Hans">终于到派对游戏啦！</span>" means "Party game time at last!". "drop flag:bot" is the relay ignoring its own line. YouTube was confirmed live only at 15:52:48, and the relay reported the post as not seen there instead of assuming it had landed.</p>
+        <p class="en">"<span lang="zh-Hans">终于到派对游戏啦！</span>" means "Party game time at last!". "drop flag:bot" is the relay ignoring its own line. YouTube was confirmed live only at 15:52:48, and the relay reported the post as not seen there instead of assuming it had landed.</p>
+      </div>
     </div>
-  </section>
+  </details>
 
-  <h2>What broke, and the root cause</h2>
-  <p>Every row comes from my project records or the logs, with the date it happened.</p>
-  <div class="table">
-    <table>
-      <thead><tr><th>When</th><th>What happened</th><th>Root cause</th><th>What changed</th></tr></thead>
-      <tbody>
-        <tr><td class="when">30 Jul 2026</td><td>The Twitch bitrate collapsed mid-stream.</td><td>File sync was copying the growing stream recording to the other PC.</td><td>Both STARTs stop file sync for the session; Stop starts it again.</td></tr>
-        <tr><td class="when">4 Oct 2026</td><td>Before the first real run, a review found that the Twitch request body would go out as a list of numbers.</td><td>PowerShell unrolls a byte array that a function returns, so the body would have been sent as decimal text. The tests passed because they used a fake; an adversarial review that sent a real request to a local listener caught it.</td><td>The function returns the byte array whole: <code>return ,([System.Text.Encoding]::UTF8.GetBytes($json))</code>.</td></tr>
-        <tr><td class="when">4 Oct 2026</td><td>After I picked the phone-format key in YouTube Studio, Studio swapped the two stream keys.</td><td>Studio-side behaviour. The API can see only the main key, not the phone-format one.</td><td>The launcher's main-key check blocked the start. Since 30 Oct the launcher switches the main key back once through the API, then checks again.</td></tr>
-        <tr><td class="when">5 Oct 2026</td><td>Twitch control (Streamer.bot) would not start.</td><td>Windows Smart App Control blocked one of its unsigned files, found in the Windows event log. Not our code.</td><td>The security setting was left alone: changing it is my call, not the agent's.</td></tr>
-        <tr><td class="when">7 Oct 2026</td><td>"Streamer.bot is not running", with Streamer.bot open.</td><td>Its server takes about 37 s to come up; the launcher waited 25 s.</td><td>Waits up to 60 s, with a clearer message.</td></tr>
-        <tr><td class="when">7–9 Oct 2026 (fixed 10 Oct)</td><td>YouTube failed after Apply; Twitch was fine.</td><td>The launcher read YouTube before Studio had prepared the broadcast.</td><td>Opens Studio first and re-checks for up to 90 s (19 s in this session).</td></tr>
-        <tr><td class="when">Late Oct 2026, same day</td><td>Twitch went live; YouTube did not.</td><td>Claude Code wrote a read-only probe: YouTube received both video feeds for 3 minutes but never started the broadcast, so OBS and the launcher were fine. My screenshot of Studio showed the cause: its phone-format panel was set to an old, unused key and waited for a feed that never came. The API cannot read that setting.</td><td>I switched it by hand in Studio and the broadcast went live right after. Rule kept: the agent diagnoses read-only; Studio settings stay my job.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2>Who did what</h2>
-  <div class="cols">
-    <div class="box">
-      <h3>Me</h3>
-      <ul>
-        <li>Chose the split: the game on one PC, encoding and AI on the laptop.</li>
-        <li>Asked for or approved the rules: a review card before any metadata write, AI lines posted under my account and labelled as AI, an emergency mute hotkey.</li>
-        <li>Ran the live tests, and checked YouTube Studio with my own eyes where the API is blind.</li>
-        <li>The avatar is my own 3D model. The AI model followed the free-tier limits on my Google account.</li>
-      </ul>
+  <details class="more">
+    <summary>The session in numbers<span class="gist">19 s waiting for YouTube, 33 s from the Twitch write to YouTube live, a 1.2 s chat gap, 60 fps.</span></summary>
+    <div class="in">
+      <dl class="best">
+        <div><dt>Waiting for YouTube</dt><dd><span class="big">19 s</span> until the broadcast was ready, checked 3 times in all (an earlier start that day took 89 s)</dd></div>
+        <div><dt>Apply to live on YouTube</dt><dd><span class="big">33 s</span> from the Twitch write and read-back to YouTube confirmed live, including my press of Start</dd></div>
+        <div><dt>Chat capture gap</dt><dd><span class="big">1.2 s</span> while it restarted for the live YouTube chat</dd></div>
+        <div><dt>OBS, 9 s after going live</dt><dd><span class="big">60 fps</span>, 0 of 491 frames dropped on the Twitch output</dd></div>
+      </dl>
+      <p class="muted">Times are from the launcher logs (Malaysia time); the OBS figures are from its Stats panel in the screenshot below.</p>
     </div>
-    <div class="box">
-      <h3>Claude Code</h3>
-      <ul>
-        <li>Wrote the launchers (PowerShell), the review card (WinForms), the YouTube Data API and Twitch writers with read-back, and the live watcher.</li>
-        <li>Wrote the chat relay (Python, aiohttp) between Social Stream Ninja and the co-host.</li>
-        <li>Tests: 167 Python tests and 809 PowerShell checks for the metadata step, on PowerShell 5.1 and 7 (30 Oct 2026).</li>
-        <li>Diagnosed most of the faults in the table above from the logs and from read-only probes.</li>
-      </ul>
-    </div>
-  </div>
+  </details>
 
-  <h2>Scope, stated plainly</h2>
-  <p>A single-operator setup with a small audience: the YouTube page above shows one viewer. The point is the automation and the gates, not reach. OBS, AITuberKit, Social Stream Ninja and Streamer.bot are existing tools; what was built is the launch automation, the review gate, the API writers and the chat relay. Some steps stay manual on purpose: starting the stream, and any YouTube Studio setting the API cannot reach.</p>
+  <details class="more">
+    <summary>What broke, and the root cause<span class="gist">7 problems from July to October 2026, each with its root cause and what changed.</span></summary>
+    <div class="in">
+      <p>Every row comes from my project records or the logs, with the date it happened.</p>
+      <div class="table">
+        <table>
+          <thead><tr><th>When</th><th>What happened</th><th>Root cause</th><th>What changed</th></tr></thead>
+          <tbody>
+            <tr><td class="when">30 Jul 2026</td><td>The Twitch bitrate collapsed mid-stream.</td><td>File sync was copying the growing stream recording to the other PC.</td><td>Both STARTs stop file sync for the session; Stop starts it again.</td></tr>
+            <tr><td class="when">4 Oct 2026</td><td>Before the first real run, a review found that the Twitch request body would go out as a list of numbers.</td><td>PowerShell unrolls a byte array that a function returns, so the body would have been sent as decimal text. The tests passed because they used a fake; an adversarial review that sent a real request to a local listener caught it.</td><td>The function returns the byte array whole: <code>return ,([System.Text.Encoding]::UTF8.GetBytes($json))</code>.</td></tr>
+            <tr><td class="when">4 Oct 2026</td><td>After I picked the phone-format key in YouTube Studio, Studio swapped the two stream keys.</td><td>Studio-side behaviour. The API can see only the main key, not the phone-format one.</td><td>The launcher's main-key check blocked the start. Since 30 Oct the launcher switches the main key back once through the API, then checks again.</td></tr>
+            <tr><td class="when">5 Oct 2026</td><td>Twitch control (Streamer.bot) would not start.</td><td>Windows Smart App Control blocked one of its unsigned files, found in the Windows event log. Not our code.</td><td>The security setting was left alone: changing it is my call, not the agent's.</td></tr>
+            <tr><td class="when">7 Oct 2026</td><td>"Streamer.bot is not running", with Streamer.bot open.</td><td>Its server takes about 37 s to come up; the launcher waited 25 s.</td><td>Waits up to 60 s, with a clearer message.</td></tr>
+            <tr><td class="when">7–9 Oct 2026 (fixed 10 Oct)</td><td>YouTube failed after Apply; Twitch was fine.</td><td>The launcher read YouTube before Studio had prepared the broadcast.</td><td>Opens Studio first and re-checks for up to 90 s (19 s in this session).</td></tr>
+            <tr><td class="when">Late Oct 2026, same day</td><td>Twitch went live; YouTube did not.</td><td>Claude Code wrote a read-only probe: YouTube received both video feeds for 3 minutes but never started the broadcast, so OBS and the launcher were fine. My screenshot of Studio showed the cause: its phone-format panel was set to an old, unused key and waited for a feed that never came. The API cannot read that setting.</td><td>I switched it by hand in Studio and the broadcast went live right after. Rule kept: the agent diagnoses read-only; Studio settings stay my job.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary>Who did what, in full<span class="gist">The calls I made, and what Claude Code wrote and diagnosed.</span></summary>
+    <div class="in">
+      <div class="cols">
+        <div class="box">
+          <h3>Me</h3>
+          <ul>
+            <li>Chose the split: the game on one PC, encoding and AI on the laptop.</li>
+            <li>Asked for or approved the rules: a review card before any metadata write, AI lines posted under my account and labelled as AI, an emergency mute hotkey.</li>
+            <li>Ran the live tests, and checked YouTube Studio with my own eyes where the API is blind.</li>
+            <li>The avatar is my own 3D model. The AI model followed the free-tier limits on my Google account.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Claude Code</h3>
+          <ul>
+            <li>Wrote the launchers (PowerShell), the review card (WinForms), the YouTube Data API and Twitch writers with read-back, and the live watcher.</li>
+            <li>Wrote the chat relay (Python, aiohttp) between Social Stream Ninja and the co-host.</li>
+            <li>Tests: 167 Python tests and 809 PowerShell checks for the metadata step, on PowerShell 5.1 and 7 (30 Oct 2026).</li>
+            <li>Diagnosed most of the faults in the table above from the logs and from read-only probes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="more">
+    <summary>Scope, stated plainly<span class="gist">A single-operator setup with a small audience; which parts are existing tools and which were built.</span></summary>
+    <div class="in">
+      <p>A single-operator setup with a small audience: the YouTube page above shows one viewer. The point is the automation and the gates, not reach. OBS, AITuberKit, Social Stream Ninja and Streamer.bot are existing tools; what was built is the launch automation, the review gate, the API writers and the chat relay. Some steps stay manual on purpose: starting the stream, and any YouTube Studio setting the API cannot reach.</p>
+    </div>
+  </details>
 
   <footer>
-    Tan Carlson · Built with Claude Code · Session recorded late October 2026 ·<a href="../">Back to game projects</a>
+    Tan Carlson · Built with Claude Code · Session recorded late October 2026 · <a href="../">Back to game projects</a>
   </footer>
 </div>
+<script>
+  // Open all / close all, and open a folded section when a link points at it.
+  (function () {
+    var btn = document.querySelector('.toggle');
+    var all = document.querySelectorAll('details.more');
+    if (btn) btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-pressed') !== 'true';
+      all.forEach(function (d) { d.open = open; });
+      btn.setAttribute('aria-pressed', String(open));
+      btn.textContent = open ? 'Close all' : 'Open all';
+    });
+    function openTarget() {
+      var t = location.hash && document.getElementById(location.hash.slice(1));
+      if (t && t.tagName === 'DETAILS') t.open = true;
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
+  })();
+</script>
 </body>
 </html>
